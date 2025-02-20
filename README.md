@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 01:28:02
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 13:22:46
+ * @LastEditTime: 2025-02-20 13:26:54
  * @Description: 
 -->
 ### 安装说明
@@ -18,7 +18,7 @@
 thostmduserapi_se.so -> libthostmduserapi_se.so
 ```
 ```
-libthosttraderapi_se.so -> libthosttraderapi_se.so
+thosttraderapi_se.so -> libthosttraderapi_se.so
 ```
 #### config配置
 #### INI配置
