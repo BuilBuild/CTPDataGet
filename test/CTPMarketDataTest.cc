@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-18 23:22:09
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 08:19:29
+ * @LastEditTime: 2025-02-20 08:37:51
  * @Description: 
  */
 #include <iostream>
@@ -20,7 +20,7 @@ int main()
     DataWriteFile dw;
     WriterAdapter da(&dw);
     // 设置文件写入路径
-    dw.setFileDirPath("/home/leijiulong/temp/CTPDataGet/DataStore/CSV");
+    dw.setFileDirPath("/home/leijiulong/temp/CTPDataGet/DataStore/CSV/");
     
     cad.connect(&config);
     // 添加写入回调

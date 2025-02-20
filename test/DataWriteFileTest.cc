@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 03:56:24
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 08:18:54
+ * @LastEditTime: 2025-02-20 08:35:08
  * @Description: 
  */
 #include "MarketData/DataWriteFile.h"
@@ -29,7 +29,7 @@ int main()
     std::vector<OrderBook> obvec;
     
     DataWriteFile dataWriteFile;
-    dataWriteFile.setFileDirPath("/home/leijiulong/temp/CTPDataGet/DataStore/CSV");
+    dataWriteFile.setFileDirPath("/home/leijiulong/temp/CTPDataGet/DataStore/CSV/");
     SelfWrite sw;
     WriterAdapter w(&dataWriteFile);
     WriterAdapter w2(&sw);

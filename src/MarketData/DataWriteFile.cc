@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 03:52:52
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 08:04:58
+ * @LastEditTime: 2025-02-20 08:38:33
  * @Description: 
  */
 #include "MarketData/DataWriteFile.h"
@@ -46,7 +46,7 @@ void DataWriteFile::writeFile(OrderBook &ob)
         
         file << ob.InstrumentID << ","<< ob.ExchangeInstID << "," << self_time_mk::ConvertToTimestamp(t) << ","
             << ob.LastPrice << "," << ob.Volume << ","<< ob.OpenInterest << ","
-            << ob.BidPrice1 << "," << ob.BidVolume1 << "," << ob.AskPrice1 << "," << ob.AskVolume1 << ","
+            << ob.BidPrice1 << "," << ob.BidVolume1 << "," << ob.AskPrice1 << "," << ob.AskVolume1
             // << ob.BidPrice2 << "," << ob.BidVolume2 << "," << ob.AskPrice2 << "," << ob.AskVolume2 << ","
             // << ob.BidPrice3 << "," << ob.BidVolume3 << "," << ob.AskPrice3 << "," << ob.AskVolume3 << ","
             // << ob.BidPrice4 << "," << ob.BidVolume4 << "," << ob.AskPrice4 << "," << ob.AskVolume4 << ","
@@ -60,7 +60,7 @@ void DataWriteFile::writeFile(OrderBook &ob)
         std::fstream file;
         file.open(filepath, std::ios::out | std::ios::app);
         file << "TargeName," << "ExchangeInstID," << "UpdateTime," << "LastPrice," << "Volume," << "OpenInterest,"
-            << "BidPrice1," << "BidVolume1," << "AskPrice1," << "AskVolume1,"
+            << "BidPrice1," << "BidVolume1," << "AskPrice1," << "AskVolume1"
             // << "BidPrice2," << "BidVolume2," << "AskPrice2," << "AskVolume2,"
             // << "BidPrice3," << "BidVolume3," << "AskPrice3," << "AskVolume3,"
             // << "BidPrice4," << "BidVolume4," << "AskPrice4," << "AskVolume4,"
@@ -72,12 +72,13 @@ void DataWriteFile::writeFile(OrderBook &ob)
         
         file << ob.InstrumentID << ","<< ob.ExchangeInstID << "," << self_time_mk::ConvertToTimestamp(t) << ","
             << ob.LastPrice << "," << ob.Volume << ","<< ob.OpenInterest << ","
-            << ob.BidPrice1 << "," << ob.BidVolume1 << "," << ob.AskPrice1 << "," << ob.AskVolume1 << ","
-            << ob.BidPrice2 << "," << ob.BidVolume2 << "," << ob.AskPrice2 << "," << ob.AskVolume2 << ","
-            << ob.BidPrice3 << "," << ob.BidVolume3 << "," << ob.AskPrice3 << "," << ob.AskVolume3 << ","
-            << ob.BidPrice4 << "," << ob.BidVolume4 << "," << ob.AskPrice4 << "," << ob.AskVolume4 << ","
-            << ob.BidPrice5 << "," << ob.BidVolume5 << "," << ob.AskPrice5 << "," << ob.AskVolume5 
+            << ob.BidPrice1 << "," << ob.BidVolume1 << "," << ob.AskPrice1 << "," << ob.AskVolume1
+            // << ob.BidPrice2 << "," << ob.BidVolume2 << "," << ob.AskPrice2 << "," << ob.AskVolume2 << ","
+            // << ob.BidPrice3 << "," << ob.BidVolume3 << "," << ob.AskPrice3 << "," << ob.AskVolume3 << ","
+            // << ob.BidPrice4 << "," << ob.BidVolume4 << "," << ob.AskPrice4 << "," << ob.AskVolume4 << ","
+            // << ob.BidPrice5 << "," << ob.BidVolume5 << "," << ob.AskPrice5 << "," << ob.AskVolume5 
             << '\n';
+            
         file.close();
     }
 
