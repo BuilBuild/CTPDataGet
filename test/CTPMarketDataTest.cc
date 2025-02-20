@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-18 23:22:09
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 12:54:55
+ * @LastEditTime: 2025-02-20 13:17:08
  * @Description: 
  */
 #include <iostream>
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     {
         sprintf(configPath, "%s", "/home/leijiulong/temp/CTPDataGet/config.ini");
     }
-    
+
     CTPConfig config(configPath);
     CTPMarketDataAdapter cad;
     // 初始化一个适配器对象
@@ -40,6 +40,5 @@ int main(int argc, char* argv[])
     // 订阅标的
     cad.subscribe(config.getInstrumentId());
     
-
     return 0;
 }
