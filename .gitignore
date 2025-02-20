@@ -1,0 +1,13 @@
+.vscode
+bin
+build
+*.so
+*.a
+*.ini
+*.json
+*.csv
+
+# some md
+AdapterPattern.md
+GTest.md
+spdlog.md
