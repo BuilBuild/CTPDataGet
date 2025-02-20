@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-18 20:29:54
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 11:05:46
+ * @LastEditTime: 2025-02-20 12:35:45
  * @Description: 
  */
 #pragma once
@@ -18,6 +18,7 @@ class Config
 public:
     Config(std::string path);
     virtual ~Config(){};
+    CSimpleIniA* getIniPtr(){ return ini_.get();}
 protected:
     std::unique_ptr<CSimpleIniA> ini_;
 private:

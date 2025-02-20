@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 01:28:02
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 08:27:11
+ * @LastEditTime: 2025-02-20 12:56:28
  * @Description: 
 -->
 ### 安装说明
@@ -15,13 +15,17 @@
 
 ```ini
 [questDBConfig]
-addr=101.43.5.41:9000
+addr=localhost:9000
 username=Future
 password=quest
+max_pool_size=10;
+init_pool_size=3;
 [CTP]
 ConfigPath=/home/leijiulong/temp/ctp_data/CtpConfig.json
+[CSV]
+CSVOutPutPath=/home/leijiulong/temp/CTPDataGet/DataStore/CSV/
 ```
-
+CSV 为csv文件输出路径
 ##### CTP (CtpConfig.json)
 在INI配置文件中ConfigPath为CTP配置地址
 ```json

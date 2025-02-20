@@ -18,7 +18,7 @@ void DataWriteQuestDB::specificWrite(const OrderBook &)
 {
     auto sender = questdb::ingress::line_sender::from_conf(
         // "http::addr=127.0.0.1:9000;username=Future;password=quest;");
-        "http::addr=localhost:9000;username=admin;password=quest;");
+        "http::addr=localhost:9000;username=admin;password=quest");
     questdb::ingress::line_sender_buffer buffer;
     buffer
         .table("trades")

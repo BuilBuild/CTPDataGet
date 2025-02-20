@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-18 23:22:09
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 08:37:51
+ * @LastEditTime: 2025-02-20 12:54:55
  * @Description: 
  */
 #include <iostream>
@@ -12,15 +12,27 @@
 #include "MarketData/DataWriterAdapter.h"
 #include <functional>
 
-int main()
+int main(int argc, char* argv[])
 {
-    CTPConfig config("/home/leijiulong/temp/CTPDataGet/config.ini");
+    char configPath[128]{};
+    if(argc>1)
+    {
+        sprintf(configPath, "%s", argv[1]);
+    }
+    else
+    {
+        sprintf(configPath, "%s", "/home/leijiulong/temp/CTPDataGet/config.ini");
+    }
+    
+    CTPConfig config(configPath);
     CTPMarketDataAdapter cad;
     // 初始化一个适配器对象
     DataWriteFile dw;
     WriterAdapter da(&dw);
+    auto iniPtr = config.getIniPtr();
+    const char* csvPath = iniPtr->GetValue("CSV", "CSVOutPutPath");
     // 设置文件写入路径
-    dw.setFileDirPath("/home/leijiulong/temp/CTPDataGet/DataStore/CSV/");
+    dw.setFileDirPath(csvPath);
     
     cad.connect(&config);
     // 添加写入回调
