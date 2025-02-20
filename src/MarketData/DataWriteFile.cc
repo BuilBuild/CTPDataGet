@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 03:52:52
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 08:38:33
+ * @LastEditTime: 2025-02-20 09:19:21
  * @Description: 
  */
 #include "MarketData/DataWriteFile.h"
@@ -21,7 +21,7 @@ DataWriteFile::DataWriteFile()
         [this]{
             while(true)
             {
-                if(stop && writeQueue_.size() == 0){return;}
+                // if(stop && writeQueue_.size() == 0){return;}
                 OrderBook ob{};
                 // 当队列为空时自动堵塞
                 writeQueue_.pop(ob);
@@ -104,6 +104,7 @@ DataWriteFile::~DataWriteFile()
     {
         writeThread_.join();
     }
+    std::cout << "quit" << std::endl;
 }
 
 void DataWriteFile::specificWrite(const OrderBook &ob)
