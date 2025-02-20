@@ -11,3 +11,4 @@ build
 AdapterPattern.md
 GTest.md
 spdlog.md
+QuestDBPool.md

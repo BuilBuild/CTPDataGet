@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 03:52:52
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 09:19:21
+ * @LastEditTime: 2025-02-20 09:49:27
  * @Description: 
  */
 #include "MarketData/DataWriteFile.h"
@@ -44,13 +44,14 @@ void DataWriteFile::writeFile(OrderBook &ob)
         char t[22]{};
         sprintf(t, "%s %s.%d", ob.TradingDay, ob.UpdateTime, ob.UpdateMillisec);
         
-        file << ob.InstrumentID << ","<< ob.ExchangeInstID << "," << self_time_mk::ConvertToTimestamp(t) << ","
+        file << ob.InstrumentID << "," << self_time_mk::ConvertToTimestamp(t) << ","
             << ob.LastPrice << "," << ob.Volume << ","<< ob.OpenInterest << ","
             << ob.BidPrice1 << "," << ob.BidVolume1 << "," << ob.AskPrice1 << "," << ob.AskVolume1
             // << ob.BidPrice2 << "," << ob.BidVolume2 << "," << ob.AskPrice2 << "," << ob.AskVolume2 << ","
             // << ob.BidPrice3 << "," << ob.BidVolume3 << "," << ob.AskPrice3 << "," << ob.AskVolume3 << ","
             // << ob.BidPrice4 << "," << ob.BidVolume4 << "," << ob.AskPrice4 << "," << ob.AskVolume4 << ","
             // << ob.BidPrice5 << "," << ob.BidVolume5 << "," << ob.AskPrice5 << "," << ob.AskVolume5 
+            << "," << ob.Turnover
             << '\n';
         file.close();
     }
@@ -59,8 +60,8 @@ void DataWriteFile::writeFile(OrderBook &ob)
         // 文件不存在
         std::fstream file;
         file.open(filepath, std::ios::out | std::ios::app);
-        file << "TargeName," << "ExchangeInstID," << "UpdateTime," << "LastPrice," << "Volume," << "OpenInterest,"
-            << "BidPrice1," << "BidVolume1," << "AskPrice1," << "AskVolume1"
+        file << "FutureID," << "UpdateTime," << "LastPrice," << "Volume," << "OpenInterest,"
+            << "BidPrice1," << "BidVolume1," << "AskPrice1," << "AskVolume1," << "Turnover"
             // << "BidPrice2," << "BidVolume2," << "AskPrice2," << "AskVolume2,"
             // << "BidPrice3," << "BidVolume3," << "AskPrice3," << "AskVolume3,"
             // << "BidPrice4," << "BidVolume4," << "AskPrice4," << "AskVolume4,"
@@ -70,13 +71,14 @@ void DataWriteFile::writeFile(OrderBook &ob)
         char t[22]{};
         sprintf(t, "%s %s.%d", ob.TradingDay, ob.UpdateTime, ob.UpdateMillisec);
         
-        file << ob.InstrumentID << ","<< ob.ExchangeInstID << "," << self_time_mk::ConvertToTimestamp(t) << ","
+        file << ob.InstrumentID << "," << self_time_mk::ConvertToTimestamp(t) << ","
             << ob.LastPrice << "," << ob.Volume << ","<< ob.OpenInterest << ","
             << ob.BidPrice1 << "," << ob.BidVolume1 << "," << ob.AskPrice1 << "," << ob.AskVolume1
             // << ob.BidPrice2 << "," << ob.BidVolume2 << "," << ob.AskPrice2 << "," << ob.AskVolume2 << ","
             // << ob.BidPrice3 << "," << ob.BidVolume3 << "," << ob.AskPrice3 << "," << ob.AskVolume3 << ","
             // << ob.BidPrice4 << "," << ob.BidVolume4 << "," << ob.AskPrice4 << "," << ob.AskVolume4 << ","
             // << ob.BidPrice5 << "," << ob.BidVolume5 << "," << ob.AskPrice5 << "," << ob.AskVolume5 
+            << "," << ob.Turnover
             << '\n';
             
         file.close();
