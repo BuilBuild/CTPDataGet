@@ -16,7 +16,7 @@
 namespace self_time_mk{
 
 // 高效解析时间戳（毫秒级）
-int64_t ConvertToTimestamp(const std::string &datetime)
+inline int64_t ConvertToTimestamp(const std::string &datetime)
 {
     // 格式: "YYYYMMDD HH:mm:ss.fff"
     int year, month, day, hour, minute, second, millisecond;

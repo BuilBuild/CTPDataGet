@@ -16,11 +16,13 @@ set(DataWriteQuestDBSRC
     ${CMAKE_CURRENT_SOURCE_DIR}/MarketData/DataWriteQuestDB.cc
 )
 
+
 find_package(TBB REQUIRED)
 # find_package(questdb REQUIRED)
 add_library(MarketData ${MarketDataSRC})
 add_library(DataWriteFile ${DataWriter})
 add_library(DataWriteQuestDB ${DataWriteQuestDBSRC})
+
 
 target_link_libraries(MarketData PUBLIC thostmduserapi_se)
 target_link_libraries(DataWriteFile PUBLIC TBB::tbb)

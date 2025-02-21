@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-18 20:35:28
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 07:09:10
+ * @LastEditTime: 2025-02-21 14:40:29
  * @Description: 
  */
 
@@ -15,6 +15,14 @@
 
 CTPMarketDataAdapter::CTPMarketDataAdapter()
 {
+    // writeCallBackThread_ = std::thread([this]{
+    //     while(true)
+    //     {
+    //         std::function<void(void)> t;
+    //         cbExcQueue_.pop(t);
+    //         t();
+    //     }
+    // });
 }
 
 CTPMarketDataAdapter::~CTPMarketDataAdapter()
@@ -86,6 +94,7 @@ void CTPMarketDataAdapter::init()
 
 void CTPMarketDataAdapter::set_callback(MarketDataCallback cb)
 {
+    cbSetList_.emplace_back(cb);
     cb_ = cb;
 }
 
@@ -112,7 +121,10 @@ void CTPMarketDataAdapter::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserL
 void CTPMarketDataAdapter::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
 {
     // 设置将行情信息传回调
-    cb_(*pDepthMarketData);
+    for(auto c : cbSetList_)
+    {
+        c(*pDepthMarketData);
+    }
 }
 
 void CTPMarketDataAdapter::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) 

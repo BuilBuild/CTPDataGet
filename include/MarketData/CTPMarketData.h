@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-18 20:31:34
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 06:58:19
+ * @LastEditTime: 2025-02-21 13:49:16
  * @Description: 
  */
 #pragma once
@@ -11,6 +11,13 @@
 #include "CTP/ThostFtdcMdApi.h"
 #include "CTPConfig.h"
 
+#include <tbb/concurrent_queue.h>
+#include <tbb/concurrent_vector.h>
+#include <thread>
+
+// using CallBackQueue = tbb:: <std::function<void(void)>>;
+using CallBackQueue = tbb::concurrent_bounded_queue <std::function<void(void)>>;
+using CallBackSetList = tbb::concurrent_vector<MarketDataCallback>;
 
 class CTPMarketDataAdapter : public MarketDataAdapter, CThostFtdcMdSpi
 {
@@ -77,6 +84,10 @@ private:
 private:
     CThostFtdcMdApi *pUserApi_ = nullptr;
     MarketDataCallback cb_;
+	CallBackSetList cbSetList_;
+	CallBackQueue cbExcQueue_;
     CTPConfig* configPtr_ = nullptr;
+	std::thread writeCallBackThread_;
+	
 };
 
