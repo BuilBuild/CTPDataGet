@@ -27,3 +27,6 @@ add_library(DataWriteQuestDB ${DataWriteQuestDBSRC})
 target_link_libraries(MarketData PUBLIC thostmduserapi_se)
 target_link_libraries(DataWriteFile PUBLIC TBB::tbb)
 target_link_libraries(DataWriteQuestDB PUBLIC questdb_client)
+
+add_executable(main main.cc)
+target_link_libraries(main MarketData DataWriteFile DataWriteQuestDB)
