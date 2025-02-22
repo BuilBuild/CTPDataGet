@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 21:52:42
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-22 23:16:09
+ * @LastEditTime: 2025-02-23 00:16:02
  * @Description:
  */
 #pragma once
@@ -134,7 +134,7 @@ typedef struct RiskParams
     double maxPositionLimit;    // 最大持仓限制
     double maxOrderSize;        // 最大单笔下单量
     double volatilityThreshold; // 波动率阈值
-} RiskParams;
+}RiskParams;
 
 typedef struct OrderSlice{
     uint64_t sliceId;     // 唯一分片标识
@@ -152,7 +152,7 @@ typedef struct MarketDataEvent {
     std::string symbol;     // 交易标的
     Timestamp timestamp;    // 时间戳
     // std::variant<TickData, OrderBookSnapshot, Trade> data;
-};
+} MarketDataEvent;
 
 // 执行策略配置
 typedef struct ExecutionStrategyConfig
@@ -162,7 +162,7 @@ typedef struct ExecutionStrategyConfig
     int maxParticipationRate;  // 最大市场参与率 (%)
     bool allowDarkPool;        // 是否允许暗池交易
     // ... 其他风控参数
-};
+} ExecutionStrategyConfig;
 
 // 执行算法参数
 typedef struct ExecutionParameters {
@@ -170,7 +170,7 @@ typedef struct ExecutionParameters {
     TimeRange executionWindow;   // 执行时间窗口
     int sliceCount;              // 分片数量（TWAP 分片）
     double maxDeviation;         // 允许的价格偏离
-};
+} ExecutionParameters;
 
 // 路由决策结果
 typedef struct RouteDecision {
@@ -178,7 +178,7 @@ typedef struct RouteDecision {
     double expectedFillPrice;    // 预期成交价
     int allocatedQuantity;       // 分配数量
     RoutingLogic logic;          // 路由逻辑（价格优先/流动性优先）
-};
+} RouteDecision;
 
 // 交易所状态
 typedef struct ExchangeStatus {
