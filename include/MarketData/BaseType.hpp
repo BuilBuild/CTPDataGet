@@ -11,12 +11,13 @@
 
 #include "CTP/ThostFtdcUserApiStruct.h"
 
-
+// 交易目标类型
 enum TargetType
 {
     futures=0,
     stock
 };
+
 
 using OrderBookElement = CThostFtdcDepthMarketDataField;
 using OrderBook = CThostFtdcDepthMarketDataField;

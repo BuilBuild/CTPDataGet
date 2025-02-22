@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 10:15:57
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-21 14:18:38
+ * @LastEditTime: 2025-02-22 23:21:03
  * @Description: 
  */
 #pragma once
@@ -62,7 +62,7 @@ private:
     static int initPoolSize_;
 };
 
-
+// QuestDB数据库写入
 class DataWriteQuestDB : public WriterAdaptee
 {
 public:
