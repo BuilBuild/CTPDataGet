@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 23:46:52
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-23 01:08:14
+ * @LastEditTime: 2025-02-25 01:10:10
  * @Description: 
  */
 #pragma once
@@ -13,6 +13,7 @@
 // CTP交易接口执行器
 class CTPTraderApiExecutor : public Executor ,public CThostFtdcTraderSpi
 {
+	// 登陆 > 投资者结算确认 > 查询资金账户 > 下单 > 查询订单 > 查询成交 > 查询持仓 > 查询合约 > 查询账户
 public:
     CTPTraderApiExecutor() = delete;
     CTPTraderApiExecutor(const std::string &configPath);
@@ -82,7 +83,7 @@ public:
 	virtual void OnRspQueryMaxOrderVolume(CThostFtdcQueryMaxOrderVolumeField *pQueryMaxOrderVolume, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
 
 	///投资者结算结果确认响应
-	virtual void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
+	virtual void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	///删除预埋单响应
 	virtual void OnRspRemoveParkedOrder(CThostFtdcRemoveParkedOrderField *pRemoveParkedOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {};
@@ -407,6 +408,11 @@ public:
 
 	///银行发起变更银行账号通知
 	virtual void OnRtnChangeAccountByBank(CThostFtdcChangeAccountField *pChangeAccount) {};
+
+public:
+	// 投资者结算结果确认
+	void reqSettlementInfoConfirm();
+	void reqQueryTradingAccount();
     
 private:
     void init();
@@ -416,4 +422,17 @@ private:
     CThostFtdcTraderApi* traderApi_{};
     // 用户登陆信息
     CThostFtdcReqUserLoginField pReqUserLoginField_{};
+
+	// -------- 会话参数 --------
+	// 前置编号
+    TThostFtdcFrontIDType	tradeFrontID_;
+	// 会话编号
+    TThostFtdcSessionIDType	sessionID_;
+	// 报单引用
+    TThostFtdcOrderRefType	orderRef_;
+	// 投资者ID
+	CThostFtdcQryTradingAccountField qryTradingAccountField_{};
+	// 请求编号
+	int requestID_ = 0;
+    
 };
