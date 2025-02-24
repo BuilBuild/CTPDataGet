@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 23:52:16
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 01:20:41
+ * @LastEditTime: 2025-02-25 02:50:23
  * @Description: 
  */
 #include "Trader/EMS/CTPTraderApiExecutor.h"
@@ -13,12 +13,24 @@
 #include <spdlog/spdlog.h>
 #include <thread>
 
+
 void CTPTraderApiExecutor::execute(const OrderRequest& orderReq)
 {
-    // 执行订单
+    // 执行订单 
+    auto flag = orderConverterFactory_->convert(orderReq);
+    if (!flag)
+        spdlog::error("CTPTraderApiExecutor::execute: Order convert failed");
+    else
+    {
+        spdlog::info("CTPTraderApiExecutor::execute: Order convert success");
+        std::unique_lock<std::mutex> lck(orderQueueMutex_);
+        orderQueue_.emplace(orderConverterFactory_->reqOrderInsertField_);
+        orderQueueCV_.notify_one();
+    }
 }
 
 CTPTraderApiExecutor::CTPTraderApiExecutor(const std::string &configPath)
+    :orderConverterFactory_(std::make_unique<CTPOrderConverterFactory>(this))
 {
     // 配置登陆信息
     CSimpleIniA ini;
@@ -33,18 +45,30 @@ CTPTraderApiExecutor::CTPTraderApiExecutor(const std::string &configPath)
     sprintf(frontAddr_, "%s", frontAddr);
 
     traderApi_ = CThostFtdcTraderApi::CreateFtdcTraderApi();
-
     strcpy(qryTradingAccountField_.BrokerID, pReqUserLoginField_.BrokerID);
     strcpy(qryTradingAccountField_.InvestorID, pReqUserLoginField_.UserID);
-
     init();
+
+    orderThread_ = std::thread([this](){
+        while(isRunning_)
+        {
+            std::unique_lock<std::mutex> lck(orderQueueMutex_);
+            orderQueueCV_.wait(lck, [this](){return !orderQueue_.empty();});
+            auto order = orderQueue_.front();
+            orderQueue_.pop();
+            lck.unlock();
+            traderApi_->ReqOrderInsert(&order, requestID_++);
+        }
+    });
+
+
 }
 void CTPTraderApiExecutor::init()
 {
     traderApi_->RegisterSpi(this);
     traderApi_->RegisterFront(frontAddr_);
-    // traderApi_->SubscribePublicTopic(THOST_TERT_RESUME);
-    // traderApi_->SubscribePrivateTopic(THOST_TERT_RESUME);
+    traderApi_->SubscribePublicTopic(THOST_TERT_RESUME);
+    traderApi_->SubscribePrivateTopic(THOST_TERT_RESUME);
     // 开始连接
     traderApi_->Init();
 }
@@ -75,8 +99,6 @@ void CTPTraderApiExecutor::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserL
     // 投资者结算结果确认
     reqSettlementInfoConfirm();
 }
-
-
 
 void CTPTraderApiExecutor::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
@@ -140,9 +162,47 @@ void CTPTraderApiExecutor::OnRspQryTradingAccount(CThostFtdcTradingAccountField 
     spdlog::info(msg);
 }
 
-
-
 CTPTraderApiExecutor::~CTPTraderApiExecutor()
 {
     traderApi_->Join();
+}
+
+bool CTPOrderConverterFactory::convert(const OrderRequest &orderReq)
+{
+    std::unique_lock<std::mutex> lck(mtx_);
+    reqOrderInsertField_ = CThostFtdcInputOrderField{};
+    if(orderReq.type == OrderType::Market)
+        reqOrderInsertField_.OrderPriceType = THOST_FTDC_OPT_AnyPrice;
+    else if(orderReq.type == OrderType::Limit)
+        reqOrderInsertField_.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
+    else
+    {
+        spdlog::error("CTPOrderConverterFactory::convert: Order type error");
+        return false;
+    }
+    
+    if (orderReq.side == OrderSide::Buy)
+        reqOrderInsertField_.Direction = THOST_FTDC_D_Buy;
+    else if (orderReq.side == OrderSide::Sell)
+        reqOrderInsertField_.Direction = THOST_FTDC_D_Sell;
+    else
+    {
+        spdlog::error("CTPOrderConverterFactory::convert: Order direction error");
+        return false;
+    }
+
+    strcpy(reqOrderInsertField_.BrokerID, executor_->pReqUserLoginField_.BrokerID);
+    strcpy(reqOrderInsertField_.InvestorID, executor_->pReqUserLoginField_.UserID);
+    strcpy(reqOrderInsertField_.InstrumentID, orderReq.symbol.data());
+    strcpy(reqOrderInsertField_.OrderRef, executor_->orderRef_);
+    strcpy(reqOrderInsertField_.UserID, executor_->pReqUserLoginField_.UserID);
+    reqOrderInsertField_.LimitPrice = orderReq.price;
+    reqOrderInsertField_.VolumeTotalOriginal = orderReq.quantity;
+    reqOrderInsertField_.TimeCondition = THOST_FTDC_TC_GFD;
+    reqOrderInsertField_.VolumeCondition = THOST_FTDC_VC_AV;
+    reqOrderInsertField_.ContingentCondition = THOST_FTDC_CC_Immediately;
+    reqOrderInsertField_.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
+    reqOrderInsertField_.IsAutoSuspend = 0;
+    reqOrderInsertField_.UserForceClose = 0;
+    return true;
 }

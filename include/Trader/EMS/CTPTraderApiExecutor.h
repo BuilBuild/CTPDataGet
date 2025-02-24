@@ -2,18 +2,28 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 23:46:52
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 01:10:10
+ * @LastEditTime: 2025-02-25 02:46:42
  * @Description: 
  */
 #pragma once
 
 #include "Executor.h"
 #include "CTP/ThostFtdcTraderApi.h"
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+#include <memory>
+#include <thread>
+
+
+class CTPOrderConverterFactory;
+
 
 // CTP交易接口执行器
 class CTPTraderApiExecutor : public Executor ,public CThostFtdcTraderSpi
 {
 	// 登陆 > 投资者结算确认 > 查询资金账户 > 下单 > 查询订单 > 查询成交 > 查询持仓 > 查询合约 > 查询账户
+	friend class CTPOrderConverterFactory;
 public:
     CTPTraderApiExecutor() = delete;
     CTPTraderApiExecutor(const std::string &configPath);
@@ -434,5 +444,36 @@ private:
 	CThostFtdcQryTradingAccountField qryTradingAccountField_{};
 	// 请求编号
 	int requestID_ = 0;
+
+	// 
+	std::unique_ptr<CTPOrderConverterFactory> orderConverterFactory_;
+	// 报单队列
+	std::queue<CThostFtdcInputOrderField> orderQueue_;
+	std::mutex orderQueueMutex_;
+	std::condition_variable orderQueueCV_;
+	std::thread orderThread_;
+	bool isRunning_ = true;
     
+};
+
+class CTPOrderConverterFactory : public OrderConverterFactory
+{
+public:
+	CTPOrderConverterFactory() = delete;
+	CTPOrderConverterFactory(const CTPOrderConverterFactory&) = delete;
+	CTPOrderConverterFactory& operator=(const CTPOrderConverterFactory&) = delete;
+	explicit CTPOrderConverterFactory(Executor* executor) : OrderConverterFactory(executor) {
+		executor_ = dynamic_cast<CTPTraderApiExecutor*>(executor);
+	}
+	// 订单转换
+	bool convert(const OrderRequest& orderReq) override;
+	virtual ~CTPOrderConverterFactory() = default;
+
+	CThostFtdcInputOrderField getReqOrderInsertField() const { return reqOrderInsertField_; }
+
+public:
+    CThostFtdcInputOrderField reqOrderInsertField_;
+private:
+	CTPTraderApiExecutor* executor_;
+	std::mutex mtx_;
 };
