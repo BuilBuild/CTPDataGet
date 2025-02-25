@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 08:30:32
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 08:52:52
+ * @LastEditTime: 2025-02-25 09:37:29
  * @Description: 
  */
 #pragma once
@@ -13,7 +13,7 @@
 class CTPLimitOrderBook : public LimitOrderBook
 {
 public:
-    CTPLimitOrderBook() = default;
+    CTPLimitOrderBook();
     virtual ~CTPLimitOrderBook() = default;
 
     // 更新订单簿
@@ -35,14 +35,14 @@ public:
     // 获取订单簿深度
     virtual int getDepth() override;
     // 获取订单簿时间
-    virtual Timestamp getUpdateTime() override;
+    virtual const Timestamp& getUpdateTime() override;
 
 };
 
 class CTPILOB : public ILOB
 {
 public:
-    CTPILOB() = default;
+    CTPILOB();
     virtual ~CTPILOB() = default;
     // 创建订单簿
     virtual std::unique_ptr<LimitOrderBook> createLimitOrderBook(const std::string& symbol) override;
@@ -52,5 +52,8 @@ public:
     virtual void removeLimitOrderBook(const std::string& symbol) override;
     // 添加订单簿
     virtual void addLimitOrderBook(const std::string& symbol, std::unique_ptr<LimitOrderBook> lob) override;
+    virtual void addOrderBook(const OrderBook& orderBook) override;
+private:
     
+
 };

@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 08:19:11
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 08:51:59
+ * @LastEditTime: 2025-02-25 09:33:34
  * @Description: 
  */
 #pragma once
@@ -14,6 +14,9 @@
 #include <string>
 #include <memory>
 #include <tbb/concurrent_map.h>
+#include <tbb/concurrent_queue.h>
+#include <mutex>
+#include <thread>
 
 class LimitOrderBook
 {
@@ -40,28 +43,13 @@ public:
     // 获取订单簿深度
     virtual int getDepth() = 0;
     // 获取订单簿时间
-    virtual Timestamp getUpdateTime() = 0;
+    virtual const Timestamp& getUpdateTime() = 0;
+protected:
+    std::mutex mutex_;
+    OrderBook orderBook_{};
+    Timestamp updateTime_{};
 };
 
-class MarketDataHandler
-{
-public:
-    MarketDataHandler() = default;
-    virtual ~MarketDataHandler() = default;
-
-    // 处理市场数据
-    virtual void onMarketDataUpdate(const MarketDataEvent& event) = 0;
-};
-
-class MarketDataHandlerFactory
-{
-public:
-    MarketDataHandlerFactory() = default;
-    virtual ~MarketDataHandlerFactory() = default;
-
-    // 创建市场数据处理器
-    virtual std::unique_ptr<MarketDataHandler> createMarketDataHandler(const std::string& symbol) = 0;
-};
 
 class ILOB : public NonCopyAble
 {
@@ -78,9 +66,17 @@ public:
     virtual void removeLimitOrderBook(const std::string& symbol) = 0;
     // 添加订单簿
     virtual void addLimitOrderBook(const std::string& symbol, std::unique_ptr<LimitOrderBook> lob) = 0;
+    virtual void addOrderBook(const OrderBook& orderBook) = 0;
 protected:
     // 订单簿映射
     tbb::concurrent_map<std::string, std::unique_ptr<LimitOrderBook>> lobMap_;
+    // 订单簿队列
+    tbb::concurrent_bounded_queue<OrderBook> orderBookQueue_;
+    // 订单簿队列互斥量
+    std::mutex orderBookQueueMutex_;
+    // 订单簿队列线程
+    std::thread orderBookThread_;
+
 };
 
 

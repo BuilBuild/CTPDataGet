@@ -2,13 +2,14 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 21:42:50
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-22 23:33:43
+ * @LastEditTime: 2025-02-25 09:46:22
  * @Description: 
  */
 #pragma once
 
 #include "TraderBaseType.hpp"
 #include "ExecutionContext.hpp"
+#include "Trader/LOB/ILOB.h"
 
 #include <string>
 #include <memory>
@@ -91,4 +92,7 @@ protected:
     virtual void onMarketDataUpdate(const MarketDataEvent& event){};
     //  风控事件处理
     virtual void onRiskLimitViolated(const RiskEvent& event){};
+
+    //---------- 内部数据 ----------
+    std::unique_ptr<ILOB> iLobs_;
 };
