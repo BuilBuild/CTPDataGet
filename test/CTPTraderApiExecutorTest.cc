@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-23 00:48:18
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 00:51:04
+ * @LastEditTime: 2025-02-25 23:13:58
  * @Description: 
  */
 #include "Trader/EMS/CTPTraderApiExecutor.h"
@@ -31,7 +31,7 @@ int main()
     // executor.execute(orderReq);
     getchar();
     OrderRequest orderReq;
-    orderReq.orderId = "123";
+    orderReq.orderId = 123;
     orderReq.symbol = "000001";
     orderReq.side = OrderSide::Buy;
     orderReq.price = 10.0;

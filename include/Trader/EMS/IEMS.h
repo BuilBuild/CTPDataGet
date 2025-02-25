@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 21:42:50
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 12:27:10
+ * @LastEditTime: 2025-02-25 13:14:25
  * @Description: 
  */
 #pragma once
@@ -33,8 +33,6 @@ public:
     virtual void onMarketDataUpdate(const MarketDataEvent& event) = 0;
     virtual ~MarketDataHandler() = default;
 };
-
-
 
 
 // 执行管理系统接口
@@ -128,7 +126,7 @@ public:
     }
 
     virtual ~I_EMS() = default;
-    
+
 public:  
     std::weak_ptr<ILOB> iLobs_;
 
