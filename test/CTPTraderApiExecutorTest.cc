@@ -30,5 +30,19 @@ int main()
     // orderReq.validTime = validTime;
     // executor.execute(orderReq);
     getchar();
+    OrderRequest orderReq;
+    orderReq.orderId = "123";
+    orderReq.symbol = "000001";
+    orderReq.side = OrderSide::Buy;
+    orderReq.price = 10.0;
+    orderReq.quantity = 100;
+    orderReq.type = OrderType::Limit;
+    TimeRange validTime;
+    validTime.type = TimeRangeType::ABSOLUTE_TIME;
+    validTime.startTime = std::chrono::system_clock::now();
+    validTime.endTime = std::chrono::system_clock::now();
+    orderReq.validTime = validTime;
+    executor.execute(orderReq);
+    getchar();
     return 0;
 }

@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 23:52:16
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 02:50:23
+ * @LastEditTime: 2025-02-25 02:58:57
  * @Description: 
  */
 #include "Trader/EMS/CTPTraderApiExecutor.h"
@@ -48,7 +48,8 @@ CTPTraderApiExecutor::CTPTraderApiExecutor(const std::string &configPath)
     strcpy(qryTradingAccountField_.BrokerID, pReqUserLoginField_.BrokerID);
     strcpy(qryTradingAccountField_.InvestorID, pReqUserLoginField_.UserID);
     init();
-
+    
+    // 创建下单线程
     orderThread_ = std::thread([this](){
         while(isRunning_)
         {
@@ -57,7 +58,10 @@ CTPTraderApiExecutor::CTPTraderApiExecutor(const std::string &configPath)
             auto order = orderQueue_.front();
             orderQueue_.pop();
             lck.unlock();
-            traderApi_->ReqOrderInsert(&order, requestID_++);
+            // traderApi_->ReqOrderInsert(&order, requestID_++);
+            char msg[1024]{};
+            sprintf(msg, "CTPTraderApiExecutor::execute: OrderRef=%s, OrderSysID=%s", order.OrderRef, order.InvestorID);
+            spdlog::info(msg);
         }
     });
 
