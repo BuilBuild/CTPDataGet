@@ -2,17 +2,19 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 21:42:50
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 11:13:27
+ * @LastEditTime: 2025-02-25 12:27:10
  * @Description: 
  */
 #pragma once
 
-#include "TraderBaseType.hpp"
+#include "Trader/TraderBaseType.hpp"
 #include "ExecutionContext.hpp"
 #include "Trader/LOB/ILOB.h"
+#include "Executor.h"
 
 #include <string>
 #include <memory>
+#include <tbb/concurrent_unordered_map.h>
 
 // 执行算法接口
 class ExecutionAlgorithm
@@ -32,28 +34,7 @@ public:
     virtual ~MarketDataHandler() = default;
 };
 
-class EMSConfig
-{
-    // 系统配置
-};
 
-// 执行报告
-class ExecutionReport
-{
-    // 报告内容
-};
-
-// 风控事件
-class RiskEvent
-{
-    // 风控事件内容
-};
-
-// 动态调整参数
-class DynamicAdjustment
-{
-    // 调整参数
-};
 
 
 // 执行管理系统接口
@@ -86,7 +67,7 @@ public:
     // 停止
     virtual void stop() =0 ;
     // 添加执行算法
-    virtual void addExecutionAlgorithm(const std::string& symbol, std::unique_ptr<ExecutionAlgorithm> algo) =;
+    virtual void addExecutionAlgorithm(const std::string& symbol, std::unique_ptr<ExecutionAlgorithm> algo) = 0;
     
     // 移除执行算法
     virtual void removeExecutionAlgorithm(const std::string& symbol) =0;
@@ -125,16 +106,39 @@ public:
     
     // 移除订单簿
     virtual void removeLimitOrderBook(const std::string& symbol)=0;
+    
+    // 添加订单执行器
+    virtual void addExecutor(const std::string& symbol, std::unique_ptr<Executor> executor)
+    {
+        auto flag = executors_.find(symbol);
+        if(flag != executors_.end())
+        {
+            executors_.insert(std::make_pair(symbol, std::move(executor)));
+        }
+        else
+        {
+            executors_[symbol] = std::move(executor);
+        }
+    };
+
+    // 添加订单簿管理
+    virtual void addILOB(std::shared_ptr<ILOB> ilob)
+    {
+        iLobs_ = ilob;
+    }
 
     virtual ~I_EMS() = default;
     
+public:  
+    std::weak_ptr<ILOB> iLobs_;
+
 protected:
     //---------- 内部逻辑钩子 ----------
     // 市场数据驱动决策
     virtual void onMarketDataUpdate(const MarketDataEvent& event){};
     //  风控事件处理
     virtual void onRiskLimitViolated(const RiskEvent& event){};
-
-    //---------- 内部数据 ----------
-    std::unique_ptr<ILOB> iLobs_;
+    // 订单簿管理
+    // 执行器管理
+    tbb::concurrent_unordered_map<std::string, std::unique_ptr<Executor>> executors_;
 };

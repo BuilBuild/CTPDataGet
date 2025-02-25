@@ -20,8 +20,14 @@ set(CTPTraderApiExecutor
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/EMS/CTPTraderApiExecutor.cc
 )
 
+
+
 set(CTPLOB 
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/LOB/CTPLOB.cc
+)
+set(CTPEMS
+    ${CMAKE_CURRENT_SOURCE_DIR}/Trader/EMS/CTPEMS.cc
+
 )
 
 find_package(TBB REQUIRED)
@@ -30,6 +36,7 @@ add_library(MarketData ${MarketDataSRC})
 add_library(DataWriteFile ${DataWriter})
 add_library(DataWriteQuestDB ${DataWriteQuestDBSRC})
 add_library(CTPLOB ${CTPLOB})
+add_library(CTPEMS ${CTPEMS})
 
 add_library(CTPTraderApiExecutor ${CTPTraderApiExecutor})
 

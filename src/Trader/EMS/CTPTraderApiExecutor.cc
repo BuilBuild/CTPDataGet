@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 23:52:16
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 02:58:57
+ * @LastEditTime: 2025-02-25 12:51:47
  * @Description: 
  */
 #include "Trader/EMS/CTPTraderApiExecutor.h"
@@ -85,9 +85,15 @@ void CTPTraderApiExecutor::OnFrontConnected()
 
 void CTPTraderApiExecutor::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
+    if( 0 != pRspInfo->ErrorID)
+    {
+        OnRspError(pRspInfo, nRequestID, bIsLast);
+        return;
+    }
+    
     char msg[1024]{};
-    sprintf(msg, "CTPTraderApiExecutor::OnRspUserLogin: TradingDay=%s, LoginTime=%s, MaxOrderRef=%s, SHFETime=%s, DCETime=%s, CZCETime=%s, FFEXTime=%s, INETime=%s, ErrorID=%d, ErrorMsg=%s\n",
-            pRspUserLogin->TradingDay, pRspUserLogin->LoginTime, pRspUserLogin->MaxOrderRef, pRspUserLogin->SHFETime, pRspUserLogin->DCETime, pRspUserLogin->CZCETime, pRspUserLogin->FFEXTime, pRspUserLogin->INETime, pRspInfo->ErrorID, pRspInfo->ErrorMsg);
+    sprintf(msg, "CTPTraderApiExecutor::OnRspUserLogin: TradingDay=%s, LoginTime=%s, MaxOrderRef=%s, SHFETime=%s, DCETime=%s, CZCETime=%s, FFEXTime=%s, INETime=%s",
+            pRspUserLogin->TradingDay, pRspUserLogin->LoginTime, pRspUserLogin->MaxOrderRef, pRspUserLogin->SHFETime, pRspUserLogin->DCETime, pRspUserLogin->CZCETime, pRspUserLogin->FFEXTime, pRspUserLogin->INETime);
     
     spdlog::info(msg);
     bzero(msg, sizeof(msg));
@@ -121,9 +127,9 @@ void CTPTraderApiExecutor::reqSettlementInfoConfirm()
 	strcpy(settlementConfirmReq.InvestorID, pReqUserLoginField_.UserID);
 	int rt =traderApi_->ReqSettlementInfoConfirm(&settlementConfirmReq, requestID_++);
     if (!rt)
-		spdlog::info(">>>>>>发送投资者结算结果确认请求成功");
+		spdlog::info("reqSettlementInfoConfirm success!");
     else
-		spdlog::info("--->>>发送投资者结算结果确认请求失败");
+		spdlog::info("-reqSettlementInfoConfirm failed!");
 }
 
 void CTPTraderApiExecutor::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) 
