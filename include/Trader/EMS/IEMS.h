@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 21:42:50
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 09:46:22
+ * @LastEditTime: 2025-02-25 11:13:27
  * @Description: 
  */
 #pragma once
@@ -81,8 +81,50 @@ public:
     //---------- 系统生命周期 ----------
     // 系统初始化
     virtual void initialize(const EMSConfig& config) = 0;
-    // 系统关闭   
-    virtual void shutdown() = 0;
+    // 启动
+    virtual void start()=0;
+    // 停止
+    virtual void stop() =0 ;
+    // 添加执行算法
+    virtual void addExecutionAlgorithm(const std::string& symbol, std::unique_ptr<ExecutionAlgorithm> algo) =;
+    
+    // 移除执行算法
+    virtual void removeExecutionAlgorithm(const std::string& symbol) =0;
+    
+    // 添加市场数据处理器
+    virtual void addMarketDataHandler(const std::string& symbol, std::unique_ptr<MarketDataHandler> handler) =0;
+    
+    // 移除市场数据处理器
+    virtual void removeMarketDataHandler(const std::string& symbol) =0;
+    
+    // 添加风控事件处理器
+    // virtual void addRiskEventHandler(const std::string& symbol, std::unique_ptr<RiskEventHandler> handler) =0;
+    
+    // 移除风控事件处理器
+    virtual void removeRiskEventHandler(const std::string& symbol) =0;
+    
+    // 添加动态调整参数处理器
+    // virtual void addDynamicAdjustmentHandler(const std::string& symbol, std::unique_ptr<DynamicAdjustmentHandler> handler) = 0;
+    
+    // 移除动态调整参数处理器
+    virtual void removeDynamicAdjustmentHandler(const std::string& symbol) =0;
+    // 添加执行报告处理器
+    // virtual void addExecutionReportHandler(const std::string& symbol, std::unique_ptr<ExecutionReportHandler> handler) =0;
+    
+    // 移除执行报告处理器
+    virtual void removeExecutionReportHandler(const std::string& symbol) =0;
+    
+    // 添加订单转换器
+    // virtual void addOrderConverterFactory(const std::string& symbol, std::unique_ptr<OrderConverterFactory> converter) =0;
+    
+    // 移除订单转换器
+    virtual void removeOrderConverterFactory(const std::string& symbol) =0;
+    
+    // 添加订单簿
+    virtual void addLimitOrderBook(const std::string& symbol, std::unique_ptr<LimitOrderBook> lob) =0;
+    
+    // 移除订单簿
+    virtual void removeLimitOrderBook(const std::string& symbol)=0;
 
     virtual ~I_EMS() = default;
     
