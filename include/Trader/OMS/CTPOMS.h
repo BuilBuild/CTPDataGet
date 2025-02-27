@@ -8,6 +8,8 @@
 
 #include "IOMS.h"
 
+using OMSConfig = ORMSConfig;
+
 class CTPOMS : public IOMS
 {
 public:

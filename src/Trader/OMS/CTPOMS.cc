@@ -11,7 +11,7 @@
 CTPOMS::CTPOMS(const OMSConfig &cfg)
     : context_(1), subscriber_(context_, zmq::socket_type::sub)
 {
-    bool flag = connect(cfg.connetAddr_);
+    bool flag = connect(cfg.MarketSubAddress);
     if (flag)
     {
         marketDataThread_ = std::thread(&CTPOMS::marketDataReceive, this);

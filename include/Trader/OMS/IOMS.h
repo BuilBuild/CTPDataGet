@@ -2,13 +2,14 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 13:04:59
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-27 07:54:11
+ * @LastEditTime: 2025-02-27 08:09:56
  * @Description:
  */
 #pragma once
 
 #include "Trader/TraderBaseType.hpp"
 #include "NonCopyAble.hpp"
+#include "Trader/ORMSConfig.hpp"
 
 #include <functional>
 #include <tbb/concurrent_queue.h>
@@ -17,12 +18,6 @@
 #include <tbb/concurrent_priority_queue.h>
 #include <zmq.hpp>
 
-
-class OMSConfig 
-{
-public:
-    std::string connetAddr_;
-};
 
 class OrderEventComparator {
 public:

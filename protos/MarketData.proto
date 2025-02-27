@@ -1,0 +1,22 @@
+// 定义数据行情的协议
+syntax = "proto3";
+
+package marketdata;
+
+message MarketData {
+  string symbol = 1;    // 标的名称
+  double price = 2;     // 最新价格
+  double volume = 3;    // 成交量
+  double high = 4;      // 最高价
+  double low = 5;       // 最低价
+  double open = 6;      // 开盘价
+  double close = 7;     // 收盘价
+  double change = 8;    // 涨跌幅
+  double change_percent = 9;    // 涨跌幅百分比
+  double turnover = 10;         // 成交额
+  double bid_price = 11;        // 买一价
+  double bid_volume = 12;       // 买一量
+  double ask_price = 13;        // 卖一价
+  double ask_volume = 14;       // 卖一量
+  int64 timestamp = 15;         // 时间戳
+}
