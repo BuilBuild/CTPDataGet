@@ -17,8 +17,6 @@ set(CTPTraderApiExecutor
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/EMS/CTPTraderApiExecutor.cc
 )
 
-
-
 set(CTPLOB 
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/LOB/CTPLOB.cc
 )

@@ -6,8 +6,11 @@ link_libraries(DataWriteQuestDB)
 link_libraries(CTPTraderApiExecutor)
 link_libraries(CTPLOB)
 link_libraries(CTPEMS)
+link_libraries(protos)
+link_libraries(CTPOMS)
 link_libraries(zmq)
 link_libraries(protos)
+
 
 add_executable(CTPConfigTest CTPConfigTest.cc)
 add_executable(CTPMarkeDataTest CTPMarketDataTest.cc)
@@ -26,3 +29,6 @@ add_executable(OrderBookTest OrderBookTest.cc)
 # 测试数据行情发布
 add_executable(CTPMarketDataGetRunPub CTPMarketDataGetRunPub.cc)
 add_executable(CTPMarketDataGetSub CTPMarketDataGetSub.cc)
+
+# OMS
+add_executable(CTPOMSTest CTPOMSTest.cc)

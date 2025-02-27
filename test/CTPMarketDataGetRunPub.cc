@@ -37,8 +37,9 @@ public:
                 });
                 auto data = dataQueue_.front();
                 marketdata::MarketData dataProto;
-                dataProto.set_symbol(data.InstrumentID);
-                dataProto.set_price(data.LastPrice);
+                dataProto.set_instrumentid(data.InstrumentID);
+                dataProto.set_lastprice(data.LastPrice);
+                // dataProto.set_las(data.LastPrice);
                 std::string serializedData = dataProto.SerializeAsString();
                 // MarketData::CTPMarketData::publishData(data, socket_);
                 std::cout << "publish data:" << data.InstrumentID << std::endl;
