@@ -8,6 +8,7 @@ link_libraries(CTPLOB)
 link_libraries(CTPEMS)
 link_libraries(protos)
 link_libraries(CTPOMS)
+link_libraries(CTPMSGHUB)
 link_libraries(zmq)
 link_libraries(protos)
 
@@ -32,3 +33,6 @@ add_executable(CTPMarketDataGetSub CTPMarketDataGetSub.cc)
 
 # OMS
 add_executable(CTPOMSTest CTPOMSTest.cc)
+
+# MSGHUB
+add_executable(CTPMsgHubTest CTPMsgHubTest.cc)

@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-27 14:21:17
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-27 15:56:58
+ * @LastEditTime: 2025-02-27 19:12:10
  * @Description: 
  */
 
@@ -12,7 +12,11 @@
  #include <iostream>
 
 
- CTPMSGHUB::CTPMSGHUB(){}
+ CTPMSGHUB::CTPMSGHUB()
+ {
+    // 行情发布线程
+    marketDataPublishThread_ = std::thread(&CTPMSGHUB::PubMarketData, this);
+ }
 
  CTPMSGHUB::~CTPMSGHUB(){}
 
@@ -26,10 +30,6 @@
     contextMarketPublish_ = std::make_unique<zmq::context_t>(1);
     socketMarketPublish_ = std::make_unique<zmq::socket_t>(*contextMarketPublish_, zmq::socket_type::pub);
     socketMarketPublish_->bind(config.MarketDataPublishPort);
-
-    // 行情发布线程
-    marketDataPublishThread_ = std::thread(&CTPMSGHUB::PubMarketData, this);
-
  }
 
 
@@ -47,7 +47,7 @@
  {
     std::unique_lock<std::mutex> lock(marketDataQueueMutex_);
     lob_->addOrderBook(orderBook);
-    marketDataQueue_.push(orderBook);
+    marketDataQueue_.emplace(orderBook);
     marketDataQueueCondition_.notify_one();
  }
 
@@ -85,6 +85,6 @@
     
     socketMarketPublish_->send(zmq::str_buffer("MarketData"), zmq::send_flags::sndmore);
     std::string marketDataStr = marketData.SerializeAsString();
-    socketMarketPublish_->send(zmq::buffer(marketDataStr.c_str(), marketDataStr.size()));
+    socketMarketPublish_->send(zmq::buffer(marketDataStr.c_str(), marketDataStr.size()), zmq::send_flags::none);
 
  }
