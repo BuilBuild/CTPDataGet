@@ -1,7 +1,4 @@
-# aux_source_directory(MarketData/ SRC)
 
-
-# add_library(MarketData ${SRC})
 set(MarketDataSRC 
     ${CMAKE_CURRENT_SOURCE_DIR}/MarketData/Config.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/MarketData/CTPConfig.cc
@@ -30,14 +27,18 @@ set(CTPEMS
 
 )
 
+set(CTPOMS 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Trader/OMS/CTPOMS.cc
+)
+
 find_package(TBB REQUIRED)
-# find_package(questdb REQUIRED)
+
 add_library(MarketData ${MarketDataSRC})
 add_library(DataWriteFile ${DataWriter})
 add_library(DataWriteQuestDB ${DataWriteQuestDBSRC})
 add_library(CTPLOB ${CTPLOB})
 add_library(CTPEMS ${CTPEMS})
-
+add_library(CTPOMS ${CTPOMS})
 add_library(CTPTraderApiExecutor ${CTPTraderApiExecutor})
 
 target_link_libraries(MarketData PUBLIC thostmduserapi_se)

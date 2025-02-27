@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 13:04:59
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-26 00:57:45
+ * @LastEditTime: 2025-02-27 07:54:11
  * @Description:
  */
 #pragma once
@@ -13,8 +13,16 @@
 #include <functional>
 #include <tbb/concurrent_queue.h>
 #include <tbb/concurrent_map.h>
+#include <tbb/concurrent_unordered_map.h>
 #include <tbb/concurrent_priority_queue.h>
+#include <zmq.hpp>
 
+
+class OMSConfig 
+{
+public:
+    std::string connetAddr_;
+};
 
 class OrderEventComparator {
 public:
@@ -42,6 +50,9 @@ public:
     virtual void disconnect() = 0;
     virtual bool isConnected() const = 0;
 
+    // ----------- 行情接收 ----------
+    virtual void marketDataReceive() = 0;
+
     //---------- 事件订阅 ----------
     virtual void registerCallback(std::function<void(const OrderEvent &)> cb) = 0;
 
@@ -49,21 +60,22 @@ public:
     virtual void start() = 0; // 启动OMS
     virtual void stop() = 0;  // 停止OMS
 
-    //----------  ----------
-
-    virtual ~IOMS() = default; // 虚析构函数
 
 protected:
     //---------- 内部工具方法 ----------
     // 订单ID生成逻辑
     virtual void generateOrderID(OrderRequest &req){}
     // 订单校验
-    virtual void validateOrder(const OrderRequest &req){}
-
+    virtual bool validateOrder(const OrderRequest &req){ return false;}
     // 订单事件队列
     OrderEventQueue orderEventQueue_;
-
     // 订单列表
-    tbb::concurrent_map<std::string, OrderRequest> orderRequestMap_;
+    tbb::concurrent_map<std::string, OMSOrderBook> orderBookMap_;
+    // 活跃订单列表
+    tbb::concurrent_unordered_map<int, Order> activeOrders_;
+    // 已成交订单列表
+    tbb::concurrent_unordered_map<int, Order> filledOrders_;
+    // 更新订单队列
+    tbb::concurrent_queue<Order> orderUpdatesQueue_;
 
 };

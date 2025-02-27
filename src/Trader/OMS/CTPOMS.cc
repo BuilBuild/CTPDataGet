@@ -2,38 +2,66 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 23:42:58
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-26 00:25:39
+ * @LastEditTime: 2025-02-27 07:56:20
  * @Description:
  */
 
 #include "Trader/OMS/CTPOMS.h"
 
-CTPOMS::CTPOMS()
+CTPOMS::CTPOMS(const OMSConfig &cfg)
+    : context_(1), subscriber_(context_, zmq::socket_type::sub)
 {
+    bool flag = connect(cfg.connetAddr_);
+    if (flag)
+    {
+        marketDataThread_ = std::thread(&CTPOMS::marketDataReceive, this);
+    }
+    else
+    {
+    }
 }
 
 CTPOMS::~CTPOMS()
 {
+    if (marketDataThread_.joinable())
+    {
+        marketDataThread_.join();
+    }
 }
 
 OrderID CTPOMS::createOrder(const OrderRequest &req)
 {
+    return 0;
 }
 
-bool cancelOrder(OrderID id) {}
+bool cancelOrder(OrderID id)
+{
+    return false;
+}
 
-//---------- 状态查询接口 ----------
-OrderStatus CTPOMS::getOrderStatus(OrderID id) const {}
-std::vector<Order> CTPOMS::getOpenOrders() const {}
+OrderStatus CTPOMS::getOrderStatus(OrderID id) const
+{
+    return OrderStatus::Rejected;
+}
 
-//---------- 连接管理 ----------
-bool CTPOMS::connect(const std::string &config) {}
+std::vector<Order> CTPOMS::getOpenOrders() const
+{
+    return {};
+}
+
+bool CTPOMS::connect(const std::string &config)
+{
+    return false;
+}
+
 void CTPOMS::disconnect() {}
-bool CTPOMS::isConnected() const {}
 
-//---------- 事件订阅 ----------
+bool CTPOMS::isConnected() const { return false; }
+
+void marketDataReceive() {}
+
 void CTPOMS::registerCallback(std::function<void(const OrderEvent &)> cb) {}
 
-//---------- 系统控制 ----------
-void CTPOMS::start() {} // 启动OMS
-void CTPOMS::stop() {}  // 停止OMS
+void CTPOMS::start() {}
+
+void CTPOMS::stop() {}

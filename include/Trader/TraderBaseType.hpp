@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 21:52:42
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-26 01:35:48
+ * @LastEditTime: 2025-02-26 06:22:35
  * @Description:
  */
 #pragma once
@@ -329,27 +329,64 @@ struct PriceLevel {
 };
 
 
-class RMSOrderBook 
+class OMSOrderBook 
 {
 public:
-    // ... 订单簿数据结构定义
     // ... 订单簿操作接口定义
-    void insertOrder(Order* order)
+    void insertOrder(const Order& order)
     {
-
+        if(order.side == Side::Buy)
+        {
+            if(order.type == OrderType::Limit)
+            {
+                // 插入买单价格优先队列
+                {
+                    std::lock_guard<std::mutex> lock(mutex);
+                    if(bids_.find(order.price) == bids_.end())
+                    {
+                        bids_[order.price] = PriceQueue();
+                        bids_[order.price].emplace(order);
+                    }
+                    else
+                    {
+                        bids_[order.price].emplace(order);
+                    }
+                }
+            }
+            //... 其他订单类型处理
+        }
+        else
+        {
+            if(order.type == OrderType::Limit)
+            {
+                // 插入卖单价格优先队列
+                {
+                    std::lock_guard<std::mutex> lock(mutex);
+                    if(bids_.find(order.price) == bids_.end())
+                    {
+                        bids_[order.price] = PriceQueue();
+                        bids_[order.price].emplace(order);
+                    }
+                    else
+                    {
+                        bids_[order.price].emplace(order);
+                    }
+                }
+            }
+            //... 其他订单类型处理
+            
+        }
     }
-    void cancelOrder(Order* order){};
-    void updateOrder(Order* order){};
-    void matchOrder(Order* order){};
+    void cancelOrder(OrderID orderId){};
+    void updateOrder(OrderID orderId){};
+    void matchOrder(OrderID orderId){};
     // ... 其他操作接口
 public:
     using PriceQueue = tbb::concurrent_bounded_queue<Order>;      // 同一价格的订单队列
     using BidMap = tbb::concurrent_map<double, PriceQueue, std::greater<double>>;  // 买单价降序
     using AskMap = tbb::concurrent_map<double, PriceQueue>;  // 卖单价升序
 
-    BidMap bids;   // 买单
-    AskMap asks;   // 卖单
-
-
-
+    BidMap bids_;   // 买单
+    AskMap asks_;   // 卖单
+    std::mutex mutex;
 };
