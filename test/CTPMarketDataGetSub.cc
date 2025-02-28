@@ -25,7 +25,7 @@ int main()
         if (auto res = socket.recv(message, zmq::recv_flags::none))
         {
             // res 是 std::optional<size_t>，用 *res 获取字节数
-            std::cout << "Received " << *res << " bytes: "<< message.to_string_view() << std::endl;
+            std::cout << "Received " << *res << " bytes"<< std::endl;
             md.ParseFromArray(message.data(), message.size());
             std::cout << "Received MarketData: " << md.DebugString() << std::endl;
         }
