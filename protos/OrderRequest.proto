@@ -1,0 +1,30 @@
+syntax="proto3";
+
+message OrderRequest {
+  string order_id = 1;
+  string product_id = 2;
+  int32 quantity = 3;
+  string customer_id = 4;
+  string address = 5;
+  string city = 6;
+  string state = 7;
+  string zip = 8;
+  string country = 9;
+  string phone = 10;
+}
+message OrderResponse {
+  string order_id = 1;
+  string product_id = 2;
+  int32 quantity = 3;
+  string customer_id = 4;
+  string address = 5;
+  string city = 6;
+  string state = 7;
+  string zip = 8;
+  string country = 9;
+  string phone = 10;
+}
+
+service OrderService {
+  rpc CreateOrder (OrderRequest) returns (OrderResponse);
+}

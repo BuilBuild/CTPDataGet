@@ -8,6 +8,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/protos)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 find_package(Protobuf REQUIRED)

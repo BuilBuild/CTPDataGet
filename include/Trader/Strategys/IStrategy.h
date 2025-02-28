@@ -2,12 +2,12 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-28 07:42:55
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-28 07:59:59
+ * @LastEditTime: 2025-02-28 08:17:56
  * @Description: 
  */
 #pragma once
 
-#include "NonCopyAble.h"
+#include "NonCopyAble.hpp"
 
 #include <string>
 
@@ -16,7 +16,7 @@ typedef struct StrategyConfig
 
 } StrategyConfig;
 
-class IStrategy :  public NonCopyable
+class IStrategy :  public NonCopyAble
 {
 public:
     
@@ -34,7 +34,7 @@ public:
     // 其他信息回报
     virtual void OnQueryReport() = 0;
 
-    // 声明周期管理
+    // 生命周期管理
     virtual void OnInit() = 0;
     virtual void Start() = 0;
     virtual void Stop() = 0;

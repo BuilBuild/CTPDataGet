@@ -32,6 +32,10 @@ set(CTPOMS
 set(CTPMSGHUB 
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/MSGHUB/CTPMSGHUB.cc)
 
+set(ICTPStrategy
+    ${CMAKE_CURRENT_SOURCE_DIR}/Trader/Strategys/ICTPStrategy.cc
+)
+
 find_package(TBB REQUIRED)
 
 add_library(MarketData ${MarketDataSRC})
@@ -42,6 +46,7 @@ add_library(CTPEMS ${CTPEMS})
 add_library(CTPOMS ${CTPOMS})
 add_library(CTPMSGHUB ${CTPMSGHUB})
 add_library(CTPTraderApiExecutor ${CTPTraderApiExecutor})
+add_library(ICTPStrategy ${ICTPStrategy})
 
 
 target_link_libraries(MarketData PUBLIC thostmduserapi_se)

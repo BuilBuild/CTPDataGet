@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-27 14:21:17
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-27 19:12:10
+ * @LastEditTime: 2025-02-28 09:19:00
  * @Description: 
  */
 
@@ -82,8 +82,11 @@
     marketData.set_turnover(orderBook.Turnover);
     marketData.set_volume(orderBook.Volume);
     marketData.set_openinterest(orderBook.OpenInterest);
-    
-    socketMarketPublish_->send(zmq::str_buffer("MarketData"), zmq::send_flags::sndmore);
+    std::string topic = "MarketData";
+    topic = topic + "." + orderBook.InstrumentID;
+    std::cout << topic << std::endl;
+    zmq::message_t messageTopic(topic.data(), topic.size());
+    socketMarketPublish_->send(messageTopic,zmq::send_flags::sndmore);
     std::string marketDataStr = marketData.SerializeAsString();
     socketMarketPublish_->send(zmq::buffer(marketDataStr.c_str(), marketDataStr.size()), zmq::send_flags::none);
 

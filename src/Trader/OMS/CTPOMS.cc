@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 23:42:58
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-27 13:05:16
+ * @LastEditTime: 2025-02-28 09:36:55
  * @Description:
  */
 
@@ -68,10 +68,11 @@ void CTPOMS::marketDataReceive()
     {
         
         marketdata::MarketData md;
-        zmq::message_t message;
-        if (auto res = subscriber_.recv(message, zmq::recv_flags::none))
+        zmq::message_t topic, message;
+        if (auto res = subscriber_.recv(topic, zmq::recv_flags::none))
         {
             // 接取行情数据
+            subscriber_.recv(message, zmq::recv_flags::none);
             std::cout << "Received " << *res << " bytes: "<< message.to_string_view() << std::endl;
             md.ParseFromArray(message.data(), message.size());
             std::cout << "Received MarketData: " << md.DebugString() << std::endl;
