@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 23:42:58
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-28 09:36:55
+ * @LastEditTime: 2025-02-28 13:47:14
  * @Description:
  */
 
@@ -72,10 +72,19 @@ void CTPOMS::marketDataReceive()
         if (auto res = subscriber_.recv(topic, zmq::recv_flags::none))
         {
             // 接取行情数据
-            subscriber_.recv(message, zmq::recv_flags::none);
-            std::cout << "Received " << *res << " bytes: "<< message.to_string_view() << std::endl;
-            md.ParseFromArray(message.data(), message.size());
-            std::cout << "Received MarketData: " << md.DebugString() << std::endl;
+            if(subscriber_.recv(message, zmq::recv_flags::none))
+            {
+                std::cout << "Received " << *res << " bytes: "<< message.to_string_view() << std::endl;
+                md.ParseFromArray(message.data(), message.size());
+                std::cout << "Received MarketData: " << md.DebugString() << std::endl;
+            }
+            else
+            {
+                // 获取错误码
+                int error_code = zmq_errno();
+                std::cerr << "Receive failed (error: " << error_code << ")"
+                          << " - " << zmq_strerror(error_code) << std::endl;
+            }
         }
         else
         {

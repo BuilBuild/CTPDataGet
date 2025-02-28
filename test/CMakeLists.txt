@@ -11,6 +11,7 @@ link_libraries(CTPOMS)
 link_libraries(CTPMSGHUB)
 link_libraries(zmq)
 link_libraries(protos)
+link_libraries(ICTPStrategy)
 
 
 add_executable(CTPConfigTest CTPConfigTest.cc)
@@ -36,3 +37,7 @@ add_executable(CTPOMSTest CTPOMSTest.cc)
 
 # MSGHUB
 add_executable(CTPMsgHubTest CTPMsgHubTest.cc)
+
+# Strategy
+add_executable(MaCTPStrategyTest MaCTPStrategyTest.cc)
+

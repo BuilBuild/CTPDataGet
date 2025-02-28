@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-28 07:42:55
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-28 08:17:56
+ * @LastEditTime: 2025-02-28 13:54:01
  * @Description: 
  */
 #pragma once
@@ -10,9 +10,11 @@
 #include "NonCopyAble.hpp"
 
 #include <string>
+#include <vector>
 
 typedef struct StrategyConfig
 {
+    
 
 } StrategyConfig;
 

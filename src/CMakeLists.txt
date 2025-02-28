@@ -34,6 +34,7 @@ set(CTPMSGHUB
 
 set(ICTPStrategy
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/Strategys/ICTPStrategy.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Trader/Strategys/MaCTPStrategy.cc
 )
 
 find_package(TBB REQUIRED)
@@ -55,6 +56,8 @@ target_link_libraries(DataWriteQuestDB PUBLIC questdb_client)
 target_link_libraries(CTPTraderApiExecutor PUBLIC thosttraderapi_se)
 target_link_libraries(CTPLOB PUBLIC TBB::tbb)
 target_link_libraries(CTPMSGHUB PUBLIC CTPLOB)
+target_link_libraries(ICTPStrategy PUBLIC zmq protos)
+
 
 add_executable(main main.cc)
 target_link_libraries(main MarketData DataWriteFile DataWriteQuestDB)
