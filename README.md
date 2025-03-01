@@ -2,16 +2,18 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 01:28:02
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-20 13:26:54
+ * @LastEditTime: 2025-03-01 14:40:27
  * @Description: 
 -->
 ### 安装说明
 #### 环境要求
-| 库       | 版本                          |
-|------------|-----------------------------|
-| tbb       | 22        | 
-| spdlog    | >= 1.14   | 
-|c-questdb-client| >= 4.0.2 |
+| 库               | 版本      |
+| ---------------- | --------- |
+| tbb              | >=22      |
+| spdlog           | >= 1.14   |
+| c-questdb-client | >= 4.0.2  |
+| protobuf         | >=3.21.12 |
+| zeroMQ           | >=4.3.4   |
 ##### 上期动态库
 将上期动态库改名如下
 ```
