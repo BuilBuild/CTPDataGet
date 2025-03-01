@@ -2,11 +2,12 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 23:36:29
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 07:54:30
+ * @LastEditTime: 2025-03-01 13:55:46
  * @Description:
  */
 
 #include "IOMS.h"
+#include "protos/message.pb.h"
 
 
 using OMSConfig = ORMSConfig;
@@ -45,6 +46,11 @@ public:
     virtual void stop() override;  // 停止OMS
     //---------- 消息回复 ----------
     void requestReply();  // 回复处理
+    //---- 根据不同的消息进行处理 -----
+    void processOrderResponse(const message::OrderRequest &req, message::OrderResponse &res);  // 处理订单请求
+    
+
+
 
 private:
     //---------- 对外获取数据 ----------

@@ -2,13 +2,14 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 23:42:58
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 13:18:08
+ * @LastEditTime: 2025-03-01 14:14:44
  * @Description:
  */
 
 #include "Trader/OMS/CTPOMS.h"
 #include "protos/MarketData.pb.h"
 #include "protos/message.pb.h"
+#include "SelfUtils.hpp"
 
 CTPOMS::CTPOMS(const OMSConfig &cfg)
     : context_(1), subscriber_(context_, zmq::socket_type::sub),replySocket_(context_, zmq::socket_type::rep)
@@ -126,8 +127,12 @@ void CTPOMS::requestReply()
             req.ParseFromArray(request.data(), request.size());
             std::cout << "Received OrderRequest: " << req.DebugString() << std::endl;
             // 处理请求
+            message::OrderResponse resp;
+            processOrderResponse(req, resp);
+            // 序列化响应
+            std::string respStr = resp.SerializeAsString();
+            zmq::message_t reply(respStr.c_str(), respStr.size());
             // 发送响应
-            zmq::message_t reply(zmq::message_t("OK",2));
             replySocket_.send(reply, zmq::send_flags::none);
         }
         else
@@ -138,4 +143,18 @@ void CTPOMS::requestReply()
                       << " - " << zmq_strerror(error_code) << std::endl;
         }
     }
+}
+
+void CTPOMS::processOrderResponse(const message::OrderRequest &req, message::OrderResponse &resp)
+{
+    using namespace SelfUtil;
+    // 风控
+    // ........
+    // 生成响应
+    resp.set_order_id(req.order_id());
+    resp.set_status(true);
+    resp.set_code(1);
+    resp.set_instrumentid(req.instrumentid());
+    resp.set_time_stamp(get_timestamp());
+    
 }

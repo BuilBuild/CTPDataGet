@@ -2,13 +2,14 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-28 08:10:34
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 09:47:50
+ * @LastEditTime: 2025-03-01 14:16:52
  * @Description: 
  */
 
 #include "Trader/Strategys/ICTPStrategy.h"
 #include "protos/MarketData.pb.h"
 #include "protos/message.pb.h"
+#include "SelfUtils.hpp"
 
 #include <iostream>
 
@@ -114,6 +115,7 @@ ICTPStrategy::~ICTPStrategy()
     message::OrderRequest orderRequestMessage;
     orderRequestMessage.set_instrumentid(orderRequest.symbol);
     orderRequestMessage.set_order_id(orderRequest.orderId);
+    orderRequestMessage.set_time_stamp(SelfUtil::get_timestamp());
 
     zmq::message_t orderRequestMessageBuffer(orderRequestMessage.SerializeAsString());
     tradeReportSubscribe_.send(orderRequestMessageBuffer, zmq::send_flags::none);
@@ -121,7 +123,10 @@ ICTPStrategy::~ICTPStrategy()
     zmq::message_t tradeReportMessage;
     if(tradeReportSubscribe_.recv(tradeReportMessage, zmq::recv_flags::none))
     {
-        std::cout << "Received TradeReport: " << tradeReportMessage.to_string_view() << std::endl;
+        // 反序列化回报信息
+        message::OrderResponse orderRes;
+        orderRes.ParseFromArray(tradeReportMessage.data(), tradeReportMessage.size());
+        std::cout << "ICTPStrategy::SendOrder response: " << orderRes.DebugString() << std::endl;
     }
     else
     {

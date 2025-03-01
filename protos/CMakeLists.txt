@@ -14,9 +14,9 @@ protobuf_generate_cpp(
 add_library(protos ${PROTO_SRCS} ${PROTO_HDRS})
 
 #  grpc
-file(GLOB RPCSRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
-message(${RPCSRC})
-add_library(OrderRequestRPC  ${RPCSRC})
+# file(GLOB RPCSRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
+# message(${RPCSRC})
+# add_library(OrderRequestRPC  ${RPCSRC})
 
 
 

@@ -4,18 +4,33 @@ package message;
 
 // 订单申请
 message OrderRequest {
-  int64 order_id = 1;
-  string instrumentID = 2;
-  string user_id = 3;
-  string product_id = 4;
-  int32 quantity = 5;
+  int64 order_id = 1;           // 订单ID
+  string instrumentID = 2;      // 标的ID
+  string user_id = 3;           // 用户ID
+  int32 quantity = 5;           // 数量
+  bool side = 6;                // 买卖方向
+  double price = 7;             // 价格
+  string type = 8;              // 订单类型
+  int64 time_in_force = 9;      // 有效时间
+  int64 expire_time = 10;       // 过期时间
+  int64 time_stamp = 11;        // 时间戳
+}
+
+// 订单确认
+message OrderConfirm {
+  int64 order_id = 1;           // 订单ID
+  string user_id = 2;           // 用户ID
+  string product_id = 3;        // 标的ID
+  int32 quantity = 4;           // 数量
+  bool status = 5;            // 状态
 }
 
 // 订单回报
-message OrderConfirm {
-  string order_id = 1;
-  string user_id = 2;
-  string product_id = 3;
-  int32 quantity = 4;
-  string status = 5;
+message OrderResponse {
+    int64 order_id = 1;          // 订单ID
+    string instrumentID = 2;     // 标的ID
+    string user_id = 3;          // 用户ID
+    bool status = 4;             // 状态
+    int32 code = 5;              // 状态码
+    int64 time_stamp = 6;        // 时间戳
 }
