@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 21:52:42
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 11:24:02
+ * @LastEditTime: 2025-03-01 11:32:08
  * @Description:
  */
 #pragma once
@@ -130,6 +130,7 @@ typedef struct OrderRequest
     std::string account; // 账户
     std::string exchange;// 交易所
     Timestamp timestamp; // 时间戳
+    // ... 其他字段
 } OrderRequest;
 
 // 执行报告
@@ -190,6 +191,7 @@ typedef struct ExecutionParameters
     TimeRange executionWindow; // 执行时间窗口
     int sliceCount;            // 分片数量（TWAP 分片）
     double maxDeviation;       // 允许的价格偏离
+    // ... 其他字段
 } ExecutionParameters;
 
 // 路由决策结果
@@ -199,6 +201,7 @@ typedef struct RouteDecision
     double expectedFillPrice; // 预期成交价
     int allocatedQuantity;    // 分配数量
     RoutingLogic logic;       // 路由逻辑（价格优先/流动性优先）
+    // ... 其他字段
 } RouteDecision;
 
 // 交易所状态
@@ -207,6 +210,7 @@ typedef struct ExchangeStatus
     std::string exchangeCode; // 交易所代码
     bool isOnline;            // 是否在线
     double latency;           // 延迟（毫秒）
+    // ... 其他字段
 } ExchangeStatus;
 
 // 交易所状态更新
@@ -216,6 +220,7 @@ typedef struct ExchangeStatusUpdate
     bool isOnline;            // 是否在线
     double latency;           // 延迟（毫秒）
     Timestamp timestamp;      // 更新时间
+    // ... 其他字段
 } ExchangeStatusUpdate;
 
 // 交易所状态订阅请求
@@ -230,6 +235,7 @@ typedef struct OrderRejection
     OrderID orderId;     // 订单ID
     std::string reason;  // 拒绝原因
     Timestamp timestamp; // 拒绝时间
+    // ... 其他字段
 } OrderRejection;
 
 // 订单事件
@@ -239,6 +245,7 @@ typedef struct OrderEvent
     OrderID orderId;         // 订单ID
     OrderStatus status;      // 订单状态
     Timestamp timestamp;     // 时间戳
+    // ... 其他字段
 } OrderEvent;
 
 // 雪花算法OrderID生成
@@ -336,7 +343,7 @@ struct PriceLevel {
 class OMSOrderBook 
 {
 public:
-    // ... 订单簿操作接口定义
+    // 插入订单
     void insertOrder(const Order& order)
     {
         if(order.side == Side::Buy)

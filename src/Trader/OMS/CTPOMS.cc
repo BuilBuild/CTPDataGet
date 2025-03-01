@@ -2,12 +2,13 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 23:42:58
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 09:44:50
+ * @LastEditTime: 2025-03-01 13:18:08
  * @Description:
  */
 
 #include "Trader/OMS/CTPOMS.h"
 #include "protos/MarketData.pb.h"
+#include "protos/message.pb.h"
 
 CTPOMS::CTPOMS(const OMSConfig &cfg)
     : context_(1), subscriber_(context_, zmq::socket_type::sub),replySocket_(context_, zmq::socket_type::rep)
@@ -120,9 +121,11 @@ void CTPOMS::requestReply()
         zmq::message_t request;
         if (auto res = replySocket_.recv(request, zmq::recv_flags::none))
         {
-            std::cout << " ORDER get ------------------ Received " << *res << " bytes: " << request.to_string_view() << std::endl;
+            // 序列化消息
+            message::OrderRequest req;
+            req.ParseFromArray(request.data(), request.size());
+            std::cout << "Received OrderRequest: " << req.DebugString() << std::endl;
             // 处理请求
-            // ...
             // 发送响应
             zmq::message_t reply(zmq::message_t("OK",2));
             replySocket_.send(reply, zmq::send_flags::none);

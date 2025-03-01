@@ -61,3 +61,7 @@ target_link_libraries(ICTPStrategy PUBLIC zmq protos)
 
 add_executable(main main.cc)
 target_link_libraries(main MarketData DataWriteFile DataWriteQuestDB)
+
+# Ma策略
+add_executable(MaStrategyMain MaStrategyMain.cc)
+target_link_libraries(MaStrategyMain ICTPStrategy)
