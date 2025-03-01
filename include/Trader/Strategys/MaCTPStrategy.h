@@ -9,6 +9,7 @@
 
 #include "ICTPStrategy.h"
 
+// 均线策略，使用均线交叉进行开仓和平仓操作
 class MaCTPStrategy : public ICTPStrategy
 {
 public:

@@ -9,9 +9,10 @@
 
 #include <string>
 
+// OMS_RMS配置
 class ORMSConfig
 {
 public:
-    std::string MarketSubAddress;     // 订阅行情地址
+    std::string MarketSubAddress;           // 订阅行情地址
     std::string OrderRequestAddress;        // 订单请求地址
 };

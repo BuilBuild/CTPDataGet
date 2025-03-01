@@ -17,6 +17,7 @@
 #include <mutex>
 #include <condition_variable>
 
+// CTP策略配置
 typedef struct ICTPStrategyConfig 
 {
     // 订阅合约
@@ -28,6 +29,7 @@ typedef struct ICTPStrategyConfig
 
 } ICTPStrategyConfig;
 
+// CTP策略基类
 class ICTPStrategy : public IStrategy
 {
 public:

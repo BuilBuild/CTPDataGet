@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-28 07:42:55
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 08:20:53
+ * @LastEditTime: 2025-03-01 11:27:55
  * @Description: 
  */
 #pragma once
@@ -13,12 +13,14 @@
 #include <string>
 #include <vector>
 
+// 策略配置
 typedef struct StrategyConfig
 {
     
 
 } StrategyConfig;
 
+// 策略底层接口，所有策略必须继承该接口
 class IStrategy :  public NonCopyAble
 {
 public:

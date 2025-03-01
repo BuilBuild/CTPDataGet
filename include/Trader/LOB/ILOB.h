@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 08:19:11
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-25 09:33:34
+ * @LastEditTime: 2025-03-01 11:26:45
  * @Description: 
  */
 #pragma once
@@ -18,6 +18,7 @@
 #include <mutex>
 #include <thread>
 
+// 订单簿
 class LimitOrderBook
 {
 public:
@@ -49,6 +50,7 @@ protected:
     OrderBook orderBook_{};
     Timestamp updateTime_{};
 };
+
 
 
 class ILOB : public NonCopyAble

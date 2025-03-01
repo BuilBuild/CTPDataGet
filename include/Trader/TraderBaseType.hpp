@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-22 21:52:42
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-26 06:22:35
+ * @LastEditTime: 2025-03-01 11:24:02
  * @Description:
  */
 #pragma once
@@ -26,9 +26,9 @@ using OrderID  = int64_t;
 // 事件优先级
 enum class EventPriority
 {
-    High,  // 高
+    High,   // 高
     Normal, // 中
-    Low    // 低
+    Low     // 低
 };
 
 // 订单状态
@@ -77,6 +77,7 @@ enum class OrderSide
     Buy, // 买
     Sell // 卖
 };
+
 // 风控检查结果
 enum class RiskCheckResult
 {
@@ -119,15 +120,15 @@ typedef struct TimeRange
 // 订单请求
 typedef struct OrderRequest
 {
-    OrderID orderId; // 订单ID
+    OrderID orderId;     // 订单ID
     std::string symbol;  // 交易标的
     OrderSide side;      // 买卖方向
     double price;        // 价格
     int quantity;        // 数量
     OrderType type;      // 订单类型
     TimeRange validTime; // 有效时间窗口
-    std::string account;  // 账户
-    std::string exchange; // 交易所
+    std::string account; // 账户
+    std::string exchange;// 交易所
     Timestamp timestamp; // 时间戳
 } OrderRequest;
 
@@ -135,7 +136,7 @@ typedef struct OrderRequest
 typedef struct ExecutionReport
 {
     std::string execId;  // 执行ID
-    OrderID orderId; // 订单ID
+    OrderID orderId;     // 订单ID
     double filledPrice;  // 成交价
     int filledQty;       // 成交数量
     OrderStatus status;  // 订单状态
@@ -151,6 +152,7 @@ typedef struct RiskParams
     double volatilityThreshold; // 波动率阈值
 } RiskParams;
 
+// 订单分片
 typedef struct OrderSlice
 {
     uint64_t sliceId;    // 唯一分片标识
@@ -225,17 +227,18 @@ typedef struct ExchangeStatusSubscription
 // 订单拒绝原因
 typedef struct OrderRejection
 {
-    OrderID orderId; // 订单ID
+    OrderID orderId;     // 订单ID
     std::string reason;  // 拒绝原因
     Timestamp timestamp; // 拒绝时间
 } OrderRejection;
 
+// 订单事件
 typedef struct OrderEvent
 {
-    EventPriority priority;
-    OrderID orderId;
-    OrderStatus status;
-    Timestamp timestamp;
+    EventPriority priority;  // 事件优先级
+    OrderID orderId;         // 订单ID
+    OrderStatus status;      // 订单状态
+    Timestamp timestamp;     // 时间戳
 } OrderEvent;
 
 // 雪花算法OrderID生成
@@ -309,26 +312,27 @@ namespace snowid
 }
 
 typedef struct Order {
-    OrderID orderId;      // 原子递增ID（确保无锁唯一性）
-    std::string symbol;          // 标的代码（使用flyweight模式优化内存）
+    OrderID orderId;        // 原子递增ID（确保无锁唯一性）
+    std::string symbol;     // 标的代码（使用flyweight模式优化内存）
     Side side;              // 买卖方向（枚举：BUY/SELL）
     OrderType type;         // 订单类型（LIMIT/MARKET/IOC等）
     double price;           // 价格（定点数优化，避免浮点误差）
     int64_t quantity;       // 原始数量（支持大整数）
-    int64_t filledQty;     // 已成交数量（原子操作）
+    int64_t filledQty;      // 已成交数量（原子操作）
     OrderStatus status;     // 状态机（NEW/PARTIALLY_FILLED/FILLED/CANCELED等）
     time_t timestamp;       // 高精度时间戳（纳秒级）
     // ... 风控标记/策略ID等扩展字段
 } Order;
 
+// 价格优先队列
 struct PriceLevel {
-    int64_t price;               // 价格（使用定点数避免浮点误差）
-    std::atomic<int64_t> total_qty; // 该价位总数量（原子操作）
-    tbb::concurrent_queue<Order*> orders;
+    int64_t price;                          // 价格（使用定点数避免浮点误差）
+    std::atomic<int64_t> total_qty;         // 该价位总数量（原子操作）
+    tbb::concurrent_queue<Order*> orders;   // 该价位订单队列（使用tbb并发队列优化）
     // ... 扩展字段
 };
 
-
+// OMS订单簿
 class OMSOrderBook 
 {
 public:
@@ -377,14 +381,17 @@ public:
             
         }
     }
+    // 撤销订单
     void cancelOrder(OrderID orderId){};
+    // 修改订单
     void updateOrder(OrderID orderId){};
+    // 撮合订单
     void matchOrder(OrderID orderId){};
     // ... 其他操作接口
 public:
-    using PriceQueue = tbb::concurrent_bounded_queue<Order>;      // 同一价格的订单队列
-    using BidMap = tbb::concurrent_map<double, PriceQueue, std::greater<double>>;  // 买单价降序
-    using AskMap = tbb::concurrent_map<double, PriceQueue>;  // 卖单价升序
+    using PriceQueue = tbb::concurrent_bounded_queue<Order>;                        // 同一价格的订单队列
+    using BidMap = tbb::concurrent_map<double, PriceQueue, std::greater<double>>;   // 买单价降序
+    using AskMap = tbb::concurrent_map<double, PriceQueue>;                         // 卖单价升序
 
     BidMap bids_;   // 买单
     AskMap asks_;   // 卖单

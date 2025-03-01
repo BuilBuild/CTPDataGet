@@ -18,7 +18,7 @@
 #include <tbb/concurrent_priority_queue.h>
 #include <zmq.hpp>
 
-
+// 订单优先级比较器
 class OrderEventComparator {
 public:
     bool operator()(OrderEvent &a, OrderEvent &b) {
@@ -26,8 +26,10 @@ public:
     }
 };
 
+// 订单事件队列
 using OrderEventQueue = tbb::concurrent_priority_queue<OrderEvent,OrderEventComparator>;
 
+// OMS接口
 class IOMS : public NonCopyAble
 {
 public:
