@@ -2,12 +2,13 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-28 07:42:55
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-28 13:54:01
+ * @LastEditTime: 2025-03-01 08:20:53
  * @Description: 
  */
 #pragma once
 
 #include "NonCopyAble.hpp"
+#include "Trader/TraderBaseType.hpp"
 
 #include <string>
 #include <vector>
@@ -25,7 +26,7 @@ public:
     // 行情数据接收
     virtual void OnMarketData() = 0;
     // 发送交易请求
-    virtual void SendOrder() = 0;
+    virtual void SendOrder(const OrderRequest &orderRequest) = 0;
     // 接收交易回报
     virtual void OnTradeReport() = 0;
 

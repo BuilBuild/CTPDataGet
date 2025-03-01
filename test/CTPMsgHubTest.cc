@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-27 15:57:34
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-27 18:59:41
+ * @LastEditTime: 2025-03-01 08:50:59
  * @Description: 
  */
 #include "Trader/MSGHUB/CTPMSGHUB.h"
@@ -23,13 +23,14 @@ int main(int argc, char* argv[])
     }
     MSGHUBConfig mcfg{};
     mcfg.MarketDataPublishPort = "tcp://*:5556";
-    mcfg.MarketDataSubPort = "tcp://localhost:5557";
+    // mcfg.MarketDataSubPort = "tcp://localhost:5557";
     CTPMSGHUB ctpmsghub;
 
     ctpmsghub.Init(mcfg);
     
     CTPConfig config(configPath);
     CTPMarketDataAdapter cad;
+    // 让通过cad接收到的数据，通过ctpmsghub的回调函数WriteMarketData进行处理
     cad.set_callback(std::bind(&CTPMSGHUB::WriteMarketData, &ctpmsghub, std::placeholders::_1));
     cad.connect(&config);
     

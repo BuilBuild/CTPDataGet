@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 23:42:58
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-28 13:47:14
+ * @LastEditTime: 2025-03-01 09:44:50
  * @Description:
  */
 
@@ -10,8 +10,9 @@
 #include "protos/MarketData.pb.h"
 
 CTPOMS::CTPOMS(const OMSConfig &cfg)
-    : context_(1), subscriber_(context_, zmq::socket_type::sub)
+    : context_(1), subscriber_(context_, zmq::socket_type::sub),replySocket_(context_, zmq::socket_type::rep)
 {
+    replySocket_.bind(cfg.OrderRequestAddress.c_str());
     subscriber_.connect(cfg.MarketSubAddress.c_str());
     subscriber_.set(zmq::sockopt::subscribe, "MarketData");
     if (subscriber_)
@@ -23,6 +24,10 @@ CTPOMS::CTPOMS(const OMSConfig &cfg)
     {
         std::cout << "CTPOMS::connect failed" << std::endl;
     }
+    if(replySocket_)
+    {
+        requestReplyThread_ = std::thread(&CTPOMS::requestReply, this);
+    }
 }
 
 CTPOMS::~CTPOMS()
@@ -30,6 +35,10 @@ CTPOMS::~CTPOMS()
     if (marketDataThread_.joinable())
     {
         marketDataThread_.join();
+    }
+    if (requestReplyThread_.joinable())
+    {
+        requestReplyThread_.join();
     }
 }
 
@@ -74,7 +83,7 @@ void CTPOMS::marketDataReceive()
             // 接取行情数据
             if(subscriber_.recv(message, zmq::recv_flags::none))
             {
-                std::cout << "Received " << *res << " bytes: "<< message.to_string_view() << std::endl;
+                // std::cout << "Received " << *res << " bytes: "<< message.to_string_view() << std::endl;
                 md.ParseFromArray(message.data(), message.size());
                 std::cout << "Received MarketData: " << md.DebugString() << std::endl;
             }
@@ -103,3 +112,27 @@ void CTPOMS::registerCallback(std::function<void(const OrderEvent &)> cb) {}
 void CTPOMS::start() {}
 
 void CTPOMS::stop() {}
+
+void CTPOMS::requestReply()
+{
+    while (true)
+    {
+        zmq::message_t request;
+        if (auto res = replySocket_.recv(request, zmq::recv_flags::none))
+        {
+            std::cout << " ORDER get ------------------ Received " << *res << " bytes: " << request.to_string_view() << std::endl;
+            // 处理请求
+            // ...
+            // 发送响应
+            zmq::message_t reply(zmq::message_t("OK",2));
+            replySocket_.send(reply, zmq::send_flags::none);
+        }
+        else
+        {
+            // 获取错误码
+            int error_code = zmq_errno();
+            std::cerr << "Receive failed (error: " << error_code << ")"
+                      << " - " << zmq_strerror(error_code) << std::endl;
+        }
+    }
+}

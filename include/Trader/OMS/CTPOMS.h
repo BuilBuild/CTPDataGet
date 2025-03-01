@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 23:36:29
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-27 07:49:44
+ * @LastEditTime: 2025-03-01 07:54:30
  * @Description:
  */
 
@@ -41,12 +41,19 @@ public:
     //---------- 系统控制 ----------
     virtual void start() override; // 启动OMS
     virtual void stop() override;  // 停止OMS
+    //---------- 消息回复 ----------
+    void requestReply();  // 回复处理
 
 private:
     //---------- 对外获取数据 ----------
     zmq::context_t context_;
-    zmq::socket_t subscriber_;
+    zmq::socket_t subscriber_;  // 订阅行情
 
-    std::thread marketDataThread_;
+    std::thread marketDataThread_;  // 行情接收线程
+    //--------- 消息接收回报接口 ----------
+    zmq::socket_t replySocket_;
+    std::thread requestReplyThread_; // 回复线程
+    // 消息队列
+    // std::queue<std::pair<std::string, std::string>> requestReplyQueue_;
 
 };

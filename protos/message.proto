@@ -1,0 +1,21 @@
+syntax="proto3";
+
+package message;
+
+// 订单申请
+message OrderRequest {
+  int64 order_id = 1;
+  string instrumentID = 2;
+  string user_id = 3;
+  string product_id = 4;
+  int32 quantity = 5;
+}
+
+// 订单回报
+message OrderConfirm {
+  string order_id = 1;
+  string user_id = 2;
+  string product_id = 3;
+  int32 quantity = 4;
+  string status = 5;
+}
