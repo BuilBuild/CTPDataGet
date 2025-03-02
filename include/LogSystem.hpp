@@ -1,20 +1,12 @@
 /*
  * @Author: LeiJiulong
- * @Date: 2025-03-02 20:45:58
+ * @Date: 2025-03-02 13:47:22
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-02 20:46:00
- * @Description: 
- */
-/*
- * @Author: LeiJiulong
- * @Date: 2025-03-02 19:47:22
- * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-02 20:43:32
+ * @LastEditTime: 2025-03-02 20:49:58
  * @Description: 
  */
 #pragma once
 #include "NonCopyAble.hpp"
-
 
 #include <unordered_map>
 #include <string>
@@ -24,6 +16,7 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <mutex>
 
+// 日志系统
 class LogSystem : public NonCopyAble
 {
 public:
@@ -92,7 +85,6 @@ private:
     std::unordered_map<std::string, std::shared_ptr<spdlog::async_logger>> loggers_;    // 日志模块
     
 };
-
 
 #define LOG_INFO(...) SPDLOG_LOGGER_INFO(this->logger_, __VA_ARGS__)
 #define LOG_WARN(...) SPDLOG_LOGGER_WARN(this->logger_, __VA_ARGS__)
