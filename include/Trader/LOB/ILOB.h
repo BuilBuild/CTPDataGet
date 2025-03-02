@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-25 08:19:11
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 11:26:45
+ * @LastEditTime: 2025-03-02 11:50:59
  * @Description: 
  */
 #pragma once
@@ -70,15 +70,10 @@ public:
     virtual void addLimitOrderBook(const std::string& symbol, std::unique_ptr<LimitOrderBook> lob) = 0;
     virtual void addOrderBook(const OrderBook& orderBook) = 0;
 protected:
-    // 订单簿映射
-    tbb::concurrent_map<std::string, std::unique_ptr<LimitOrderBook>> lobMap_;
-    // 订单簿队列
-    tbb::concurrent_bounded_queue<OrderBook> orderBookQueue_;
-    // 订单簿队列互斥量
-    std::mutex orderBookQueueMutex_;
-    // 订单簿队列线程
-    std::thread orderBookThread_;
-
+    tbb::concurrent_map<std::string, std::unique_ptr<LimitOrderBook>> lobMap_;  // 订单簿映射
+    tbb::concurrent_bounded_queue<OrderBook> orderBookQueue_;                   // 订单簿队列
+    std::mutex orderBookQueueMutex_;                                            // 订单簿队列互斥量
+    std::thread orderBookThread_;                                               // 订单簿队列线程
 };
 
 

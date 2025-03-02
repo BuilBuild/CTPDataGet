@@ -64,15 +64,11 @@ protected:
     virtual void generateOrderID(OrderRequest &req){}
     // 订单校验
     virtual bool validateOrder(const OrderRequest &req){ return false;}
-    // 订单事件队列
-    OrderEventQueue orderEventQueue_;
-    // 订单列表
-    tbb::concurrent_map<std::string, OMSOrderBook> orderBookMap_;
-    // 活跃订单列表
-    tbb::concurrent_unordered_map<int, Order> activeOrders_;
-    // 已成交订单列表
-    tbb::concurrent_unordered_map<int, Order> filledOrders_;
-    // 更新订单队列
-    tbb::concurrent_queue<Order> orderUpdatesQueue_;
+protected:
+    OrderEventQueue orderEventQueue_;                               // 订单事件队列     
+    tbb::concurrent_map<std::string, OMSOrderBook> orderBookMap_;   // 订单列表
+    tbb::concurrent_unordered_map<int, Order> activeOrders_;        // 活跃订单列表
+    tbb::concurrent_unordered_map<int, Order> filledOrders_;        // 已成交订单列表
+    tbb::concurrent_queue<Order> orderUpdatesQueue_;                // 更新订单队列
 
 };

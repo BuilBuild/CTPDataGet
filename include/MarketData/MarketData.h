@@ -28,9 +28,8 @@ public:
     // 支持心跳检测、重连等基础方法
 protected:
     Config* config;
-    // 用于判断是否连接并登录成功
-    std::condition_variable cv;
+    
+    std::condition_variable cv;     // 用于判断是否连接并登录成功
     std::mutex connectMtx_;
-    // 共享条件变量
-    bool loginFlag = false;
+    bool loginFlag = false;         // 共享条件变量
 };

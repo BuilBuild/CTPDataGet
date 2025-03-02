@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 10:20:14
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-02 11:17:33
+ * @LastEditTime: 2025-03-02 11:45:44
  * @Description:
  */
 
@@ -12,15 +12,13 @@
 #include <cstring>
 
 
-
 QuestSenderPool::QuestSenderPool(const QuestDBSubscriberConfig& config) : config_(config)
 {
     for(int i = 0; i < config_.minPoolSize; ++i)
     {
         std::cout << "QuestSenderPool::QuestSenderPool " << i << std::endl;
         pool_.push(std::move(createSender()));
-    }
-    
+    } 
 }
 
 QuestSenderPool::~QuestSenderPool()
@@ -34,6 +32,7 @@ questdb::ingress::line_sender QuestSenderPool::getSender()
     {
         auto sender = std::move(pool_.front());
         pool_.pop();
+        activeCount_++;
         return sender;
     }
     // 如果池为空但未达上限
@@ -48,7 +47,6 @@ void QuestSenderPool::releaseSender(questdb::ingress::line_sender &&sender)
     activeCount_--;
     cv_.notify_one();
 }
-
 
 questdb::ingress::line_sender QuestSenderPool::createSender()
 {
@@ -75,8 +73,6 @@ QuestDBSubscriberWriter::~QuestDBSubscriberWriter()
 
 void QuestDBSubscriberWriter::orderBookWrite (const OrderBook& orderBook)
 {
-    // std::cout << "QuestDBSubscriberWriter::orderBookWrite" << std::endl;
-    // questSenderPoolPtr_->getSender();
     std::unique_lock <std::mutex> lock(orderBookQueueMutex_);
     orderBookQueue_.emplace(orderBook);
 }

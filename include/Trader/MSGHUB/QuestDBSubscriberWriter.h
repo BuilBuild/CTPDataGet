@@ -57,12 +57,6 @@ private:
     std::atomic<size_t> activeCount_;                   // QuestDB连接池活跃连接数
 };
 
-
-
-
-
-
-
 // QuestDB订阅者
 class QuestDBSubscriberWriter : public ISubscriber
 {
@@ -77,18 +71,10 @@ private:
     void writeOrderBook(const OrderBook& orderBook);
     
 private:
-    // QuestDB配置
-    QuestDBSubscriberConfig  config_;
-    // QuestDB连接池
-    std::unique_ptr<QuestSenderPool> questSenderPoolPtr_;
-    // OrderBook队列
-    std::queue<OrderBook> orderBookQueue_;
-    // OrderBook队列互斥锁
-    std::mutex orderBookQueueMutex_;
-    // OrderBook队列条件变量
-    std::condition_variable orderBookQueueCV_;
-    // 写入数据库线程
-    std::thread writerThread_;
-
-    
+    QuestDBSubscriberConfig  config_;                       // QuestDB配置
+    std::unique_ptr<QuestSenderPool> questSenderPoolPtr_;   // QuestDB连接池
+    std::queue<OrderBook> orderBookQueue_;                  // OrderBook队列
+    std::mutex orderBookQueueMutex_;                        // OrderBook队列互斥锁
+    std::condition_variable orderBookQueueCV_;              // OrderBook队列条件变量
+    std::thread writerThread_;                              // 写入数据库线程
 };

@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-21 17:33:31
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-21 17:41:09
+ * @LastEditTime: 2025-03-02 11:57:45
  * @Description: 
  */
 #include <iostream>
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     // 生成一个写入适配
     WriterAdapter adapter01(&dataWriteFile);
     
-    // // 添加写入回调
+    // 添加写入回调
     marketDataAdapter.set_callback(std::bind(&WriterAdapter::toWrite, &adapter01, std::placeholders::_1));
     
     // 再重新设置一个适配器，添加一个写入数据库的对象，并注册回调

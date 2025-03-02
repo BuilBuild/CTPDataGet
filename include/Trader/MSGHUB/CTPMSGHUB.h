@@ -49,15 +49,11 @@ private:
     std::unique_ptr<zmq::context_t> contextMarketPublish_;
     std::unique_ptr<zmq::socket_t> socketMarketPublish_;
     
-    // 内部订单簿
-    std::unique_ptr<CTPILOB> lob_;
-    // 行情数据发布线程
-    std::thread marketDataPublishThread_;
-    // 行情数据队列缓冲区
-    std::queue<OrderBook> marketDataQueue_;
-    // 行情数据队列缓冲区锁
-    std::mutex marketDataQueueMutex_;
-    // 行情数据队列缓冲区条件变量
-    std::condition_variable marketDataQueueCondition_;
+    //-------- market data 数据维护 ----------
+    std::unique_ptr<CTPILOB> lob_;                      // 内部订单簿
+    std::thread marketDataPublishThread_;               // 行情数据发布线程
+    std::queue<OrderBook> marketDataQueue_;             // 行情数据队列缓冲区
+    std::mutex marketDataQueueMutex_;                   // 行情数据队列缓冲区锁
+    std::condition_variable marketDataQueueCondition_;  // 行情数据队列缓冲区条件变量
     
 };
