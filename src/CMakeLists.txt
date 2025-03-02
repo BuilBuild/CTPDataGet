@@ -30,7 +30,9 @@ set(CTPOMS
 )
 
 set(CTPMSGHUB 
-    ${CMAKE_CURRENT_SOURCE_DIR}/Trader/MSGHUB/CTPMSGHUB.cc)
+    ${CMAKE_CURRENT_SOURCE_DIR}/Trader/MSGHUB/CTPMSGHUB.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Trader/MSGHUB/QuestDBSubscriberWriter.cc
+)
 
 set(ICTPStrategy
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/Strategys/ICTPStrategy.cc

@@ -37,6 +37,7 @@ add_executable(CTPOMSTest CTPOMSTest.cc)
 
 # MSGHUB
 add_executable(CTPMsgHubTest CTPMsgHubTest.cc)
+add_executable(QuestDBSubscriberWriterTest QuestDBSubscriberWriterTest.cc)
 
 # Strategy
 add_executable(MaCTPStrategyTest MaCTPStrategyTest.cc)

@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-27 13:15:12
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 11:25:59
+ * @LastEditTime: 2025-03-01 16:05:20
  * @Description: 
  */
 #pragma once
@@ -28,6 +28,8 @@ public:
     virtual void Start() = 0;
     virtual void Stop() = 0;
     virtual void WriteMarketData(const OrderBook& orderBook) = 0;
+    // 
+    // virtual void 
 protected:
     virtual void SubMarketData() = 0;
     virtual void PubMarketData() = 0;
