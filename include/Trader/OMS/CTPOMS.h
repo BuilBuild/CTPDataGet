@@ -49,9 +49,6 @@ public:
     //---- 根据不同的消息进行处理 -----
     void processOrderResponse(const message::OrderRequest &req, message::OrderResponse &res);  // 处理订单请求
     
-
-
-
 private:
     //---------- 对外获取数据 ----------
     zmq::context_t context_;
