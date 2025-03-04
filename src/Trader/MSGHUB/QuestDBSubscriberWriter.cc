@@ -2,11 +2,12 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 10:20:14
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-04 17:10:25
+ * @LastEditTime: 2025-03-04 19:06:41
  * @Description:
  */
 
 #include "Trader/MSGHUB/QuestDBSubscriberWriter.h"
+#include "MarketData/Utils.hpp"
 
 #include <sstream>
 #include <cstring>
@@ -75,6 +76,8 @@ void QuestDBSubscriberWriter::orderBookWrite (const OrderBook& orderBook)
 {
     std::unique_lock <std::mutex> lock(orderBookQueueMutex_);
     orderBookQueue_.emplace(orderBook);
+    std::cout << orderBookQueue_.size() << std::endl;
+    orderBookQueueCV_.notify_one();
 }
 
 void QuestDBSubscriberWriter::writeOrderBookToDB()
@@ -91,8 +94,6 @@ void QuestDBSubscriberWriter::writeOrderBookToDB()
 
 void QuestDBSubscriberWriter::writeOrderBook(const OrderBook& orderBook)
 {
-    std::cout << "writeOrderBook" << std::endl;
-    std::cout << orderBook.InstrumentID << std::endl;
     auto sender =  questSenderPoolPtr_->getSender();
     questdb::ingress::line_sender_buffer buffer;
     buffer.table("FutureTest1")
@@ -100,13 +101,13 @@ void QuestDBSubscriberWriter::writeOrderBook(const OrderBook& orderBook)
     .column("LastPrice", orderBook.LastPrice).column("Volume", (int64_t)orderBook.Volume);
 
     buffer.column("BidPrice1", orderBook.BidPrice1).column("BidVolume1", (int64_t)orderBook.BidVolume1);
-    buffer.column("BidPrice5", orderBook.BidPrice5).column("BidVolume5", (int64_t)orderBook.BidVolume5);
+    // buffer.column("BidPrice5", orderBook.BidPrice5).column("BidVolume5", (int64_t)orderBook.BidVolume5);
     buffer.column("AskPrice1", orderBook.AskPrice1).column("AskVolume1",(int64_t)orderBook.AskVolume1); 
     char t[22]{};
     sprintf(t, "%s %s.%d", orderBook.TradingDay, orderBook.UpdateTime, orderBook.UpdateMillisec);
-    // auto tk = self_time_mk::ConvertToTimestamp(t);
-    // auto tp = std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>(std::chrono::milliseconds(tk));
-    // buffer.column("UpdateTime", tk);
+    auto tk = self_time_mk::ConvertToTimestamp(t);
+    auto tp = std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds>(std::chrono::milliseconds(tk));
+    buffer.column("UpdateTime", tk);
     buffer.at(questdb::ingress::timestamp_nanos::now());
 
     sender.flush(buffer);

@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-03-03 07:53:51
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-04 16:47:39
+ * @LastEditTime: 2025-03-04 19:12:03
  * @Description: 启动消息中心，用于接收市场行情数据和推送数据，可注册数据写入地址
  */
 
@@ -24,10 +24,7 @@ int main(int argc, char* argv[])
     {
         sprintf(configPath, "%s", "/home/leijiulong/temp/CTPDataGet/config.ini");
     }
-    MSGHUBConfig mcfg{};
-    mcfg.MarketDataPublishPort = "tcp://*:5556";
-    CTPMSGHUB ctpmsghub;
-    // 给数据中心注入数据写入其他位置的回调
+    
     // 先初始化一个写入对象
     QuestDBSubscriberConfig qdbconfig{};
     qdbconfig.host = "127.0.0.1:9000";
@@ -36,11 +33,13 @@ int main(int argc, char* argv[])
     qdbconfig.minPoolSize = 2;
     qdbconfig.maxPoolSize = 10;
     QuestDBSubscriberWriter questDBwriter(qdbconfig);
-    
-    ctpmsghub.RegisterMarketDataCallback(std::bind(&QuestDBSubscriberWriter::orderBookWrite, &questDBwriter, std::placeholders::_1));
 
-    // QuestDBSubscriberWriter qdbw;
-    
+    // 生成一个消息中心对象,并注册回调函数
+    MSGHUBConfig mcfg{};
+    mcfg.MarketDataPublishPort = "tcp://*:5556";
+    CTPMSGHUB ctpmsghub;
+    // 注册写入数据库的回调函数
+    ctpmsghub.RegisterMarketDataCallback(std::bind(&QuestDBSubscriberWriter::orderBookWrite, &questDBwriter, std::placeholders::_1));
 
     ctpmsghub.Init(mcfg);
     
