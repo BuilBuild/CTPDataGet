@@ -9,6 +9,7 @@
 
 #include "IStrategy.h"
 #include "Trader/TraderBaseType.hpp"
+#include "LogSystem.hpp"
 
 #include <zmq.hpp>
 #include <memory>
@@ -89,6 +90,10 @@ protected:
     std::condition_variable orderQueueCondition_;
     // 订单发送与消息回报线程
     std::thread orderThread_;
+
+    // 定义一个日志槽
+    std::shared_ptr<spdlog::logger> logger_;
+
 
 };
 

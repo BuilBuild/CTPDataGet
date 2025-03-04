@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-28 08:10:34
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 14:16:52
+ * @LastEditTime: 2025-03-04 20:07:56
  * @Description: 
  */
 
@@ -11,11 +11,17 @@
 #include "protos/message.pb.h"
 #include "SelfUtils.hpp"
 
+#include <sstream>
+
 #include <iostream>
 
 ICTPStrategy::ICTPStrategy(const ICTPStrategyConfig& config)
     :context_(1), marketDataSubscribe_(context_, zmq::socket_type::sub), tradeReportSubscribe_( context_, zmq::socket_type::req)
 {
+    // 注册日志
+    
+    logger_ = LogSystem::RegisterLogger("ICTPStrategy");
+
     marketDataSubscribe_.connect(config.subAddr_.c_str());
     for(auto ins : config.instruments_)
     {
@@ -23,7 +29,7 @@ ICTPStrategy::ICTPStrategy(const ICTPStrategyConfig& config)
     }
     if(marketDataSubscribe_)
     {
-        std::cout << "ICTPStrategy::ICTPStrategy success" << std::endl;
+        LOG_INFO("ICTPStrategy::ICTPStrategy success");
         tradeReportSubscribe_.connect(config.orderAddr_.c_str());
     }
     else
@@ -103,6 +109,9 @@ ICTPStrategy::~ICTPStrategy()
     // 获取锁
     std::lock_guard<std::mutex> lock(orderQueueMutex_);
     orderQueue_.emplace(orderRequest);
+    std::string msg = "Add Order: ";
+    msg = msg + orderRequest.symbol + " " + std::to_string(orderRequest.orderId);
+    LOG_INFO(msg);
     orderQueueCondition_.notify_one();
 
  }
@@ -110,7 +119,10 @@ ICTPStrategy::~ICTPStrategy()
  // 发送交易请求
  void ICTPStrategy::SendOrder(const OrderRequest &orderRequest)
  {
-    std::cout << "ICTPStrategy::SendOrder" << std::endl;
+    LOG_INFO("ICTPStrategy::SendOrder");
+    std::string msg = "SendOrder: ";
+    msg = msg + orderRequest.symbol + " " + std::to_string(orderRequest.orderId);
+    LOG_INFO(msg);
     // 序列化订单信息
     message::OrderRequest orderRequestMessage;
     orderRequestMessage.set_instrumentid(orderRequest.symbol);
@@ -126,7 +138,9 @@ ICTPStrategy::~ICTPStrategy()
         // 反序列化回报信息
         message::OrderResponse orderRes;
         orderRes.ParseFromArray(tradeReportMessage.data(), tradeReportMessage.size());
-        std::cout << "ICTPStrategy::SendOrder response: " << orderRes.DebugString() << std::endl;
+        std::ostringstream oss;
+        oss << "OrderResponse: " << orderRes.instrumentid() << " " << orderRes.order_id() << " " << orderRes.status();
+        LOG_INFO(oss.str());
     }
     else
     {

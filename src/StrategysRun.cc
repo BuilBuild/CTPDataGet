@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-03-03 07:56:53
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-04 16:17:58
+ * @LastEditTime: 2025-03-04 19:49:06
  * @Description: 启动策略,用于订阅市场行情，生成订单
  */
 #include "Trader/Strategys/MaCTPStrategy.h"
@@ -11,8 +11,12 @@
  #include <thread>
  #include <chrono>
 
+ 
  int main()
  {
+    // 初始化日志系统
+    LogSystem::InitLogSystem();
+    
     ICTPStrategyConfig config{};
     config.subAddr_ = "tcp://localhost:5556";
     config.orderAddr_ = "tcp://localhost:5557";
