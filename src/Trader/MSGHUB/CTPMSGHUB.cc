@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-27 14:21:17
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-01 09:44:20
+ * @LastEditTime: 2025-03-04 17:09:29
  * @Description: 
  */
 
@@ -51,6 +51,11 @@
     marketDataQueueCondition_.notify_one();
  }
 
+ void CTPMSGHUB::RegisterMarketDataCallback(MarketDataCallback callback)
+ {
+   marketDataCallbacks_.emplace_back(std::move(callback));
+ }
+
  void CTPMSGHUB::SubMarketData()
  {
 
@@ -62,6 +67,12 @@
     {
         std::unique_lock<std::mutex> lock(marketDataQueueMutex_);
         marketDataQueueCondition_.wait(lock, [this] { return !marketDataQueue_.empty(); });
+        // 回调
+        for (auto& callback : marketDataCallbacks_)
+        {
+            // std::cout << "size" << marketDataCallbacks_.size() << std::endl;
+            callback(marketDataQueue_.front());
+        }
         // 发布数据
         marketDataPub(marketDataQueue_.front());
         marketDataQueue_.pop();

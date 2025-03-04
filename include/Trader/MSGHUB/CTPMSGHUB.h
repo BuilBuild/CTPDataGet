@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-27 13:20:40
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-02-27 15:47:14
+ * @LastEditTime: 2025-03-04 16:32:03
  * @Description: 
  */
 #pragma once
@@ -18,7 +18,12 @@
 // #include <atomic>
 #include <string>
 #include <queue>
+#include <vector>
 
+#include <functional>
+
+// using 
+using MarketDataCallback = std::function<void(const OrderBook&)>;
 
 class CTPMSGHUB : public IMSGHUB
 {
@@ -34,6 +39,8 @@ public:
     virtual void Stop() override;
     // 行情数据写入
     virtual void WriteMarketData(const OrderBook& orderBook) override;
+    // 注册行情数据回调函数
+    virtual void RegisterMarketDataCallback(MarketDataCallback callback);
     
 private:
     virtual void SubMarketData() override;
@@ -56,4 +63,5 @@ private:
     std::mutex marketDataQueueMutex_;                   // 行情数据队列缓冲区锁
     std::condition_variable marketDataQueueCondition_;  // 行情数据队列缓冲区条件变量
     
+    std::vector<MarketDataCallback> marketDataCallbacks_; // 行情数据回调函数
 };

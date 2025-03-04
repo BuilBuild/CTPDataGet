@@ -34,6 +34,7 @@ set(CTPMSGHUB
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/MSGHUB/QuestDBSubscriberWriter.cc
 )
 
+
 set(ICTPStrategy
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/Strategys/ICTPStrategy.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Trader/Strategys/MaCTPStrategy.cc
@@ -67,3 +68,18 @@ target_link_libraries(main MarketData DataWriteFile DataWriteQuestDB)
 # Ma策略
 add_executable(MaStrategyMain MaStrategyMain.cc)
 target_link_libraries(MaStrategyMain ICTPStrategy)
+
+# 消息中心
+add_executable(MSGHUBRun MSGHUBRun.cc)
+target_link_libraries(MSGHUBRun CTPMSGHUB MarketData zmq protos questdb_client)
+
+# 订单中心
+add_executable(CTPOMSRun CTPOMSRun.cc)
+target_link_libraries(CTPOMSRun CTPOMS TBB::tbb MarketData zmq protos)
+
+# 策略
+add_executable(StrategysRun StrategysRun.cc)
+target_link_libraries(StrategysRun ICTPStrategy)
+
+
+

@@ -2,7 +2,7 @@
  * @Author: LeiJiulong
  * @Date: 2025-02-20 10:20:14
  * @LastEditors: LeiJiulong && lei15557570906@outlook.com
- * @LastEditTime: 2025-03-02 11:45:44
+ * @LastEditTime: 2025-03-04 17:10:25
  * @Description:
  */
 
@@ -91,6 +91,7 @@ void QuestDBSubscriberWriter::writeOrderBookToDB()
 
 void QuestDBSubscriberWriter::writeOrderBook(const OrderBook& orderBook)
 {
+    std::cout << "writeOrderBook" << std::endl;
     std::cout << orderBook.InstrumentID << std::endl;
     auto sender =  questSenderPoolPtr_->getSender();
     questdb::ingress::line_sender_buffer buffer;
