@@ -42,3 +42,6 @@ add_executable(QuestDBSubscriberWriterTest QuestDBSubscriberWriterTest.cc)
 # Strategy
 add_executable(MaCTPStrategyTest MaCTPStrategyTest.cc)
 
+# crash test
+add_executable(crash_test crash_test.cc)
+

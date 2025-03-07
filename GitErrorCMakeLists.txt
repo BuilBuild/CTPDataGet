@@ -1,0 +1,55 @@
+#  获取git版本 用于版本调试
+execute_process(
+  COMMAND git describe --tags --dirty --always
+  WORKING_DIRECTORY   ${CMAKE_CURRENT_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_VERSION
+  ERROR_VARIABLE   GIT_ERROR          # 捕获错误输出
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_STRIP_TRAILING_WHITESPACE
+)
+
+if(NOT GIT_VERSION)
+  message(WARNING "Git version query failed: ${GIT_ERROR}")
+  set(GIT_VERSION "unknown-version")
+endif()
+
+# 获取编译时间
+string(TIMESTAMP COMPILE_TIME "%Y-%m-%d %H:%M:%S UTC" UTC)
+
+# 获取 Git 分支
+execute_process(
+  COMMAND git rev-parse --abbrev-ref HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_BRANCH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_QUIET
+)
+if(NOT GIT_BRANCH)
+  set(GIT_BRANCH "unknown-branch")
+endif()
+
+execute_process(
+  COMMAND git rev-parse --short HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_COMMIT
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  ERROR_QUIET
+)
+if(NOT GIT_COMMIT)
+  set(GIT_COMMIT "unknown-commit")
+endif()
+
+
+file(WRITE   ${CMAKE_BINARY_DIR}/version.h.in
+  "#pragma once\n"
+  "constexpr const char* GIT_VERSION = \"${GIT_VERSION}\";\n"
+  "constexpr const char* GIT_BRANCH = \"${GIT_BRANCH}\";\n"
+  "constexpr const char* COMPILE_TIME = \"${COMPILE_TIME}\";\n"
+  "constexpr const char* GIT_COMMIT = \"${GIT_COMMIT}\";\n"
+)
+
+configure_file(
+  ${CMAKE_BINARY_DIR}/version.h.in
+  ${CMAKE_SOURCE_DIR}/include/version.h
+  COPYONLY
+)

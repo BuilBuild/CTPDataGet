@@ -6,6 +6,11 @@ build
 *.ini
 *.json
 *.csv
+*.log
+*.out
+
+# 生成的文件
+include/version.h
 
 # some md
 AdapterPattern.md
